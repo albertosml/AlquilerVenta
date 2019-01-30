@@ -265,7 +265,9 @@ public class EliminarElemento extends javax.swing.JFrame {
     private void btn_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarActionPerformed
         OperacionesBD o = new OperacionesBD();
         try {
-            if("error".equals(o.deleteElemento(((String) elemento.getValue()).split(": ")[0]))) JOptionPane.showMessageDialog(rootPane,"No está conectado a la base de datos");
+            String s = o.deleteElemento(((String) elemento.getValue()).split(": ")[0]);
+            if("error".equals(s)) JOptionPane.showMessageDialog(rootPane,"No está conectado a la base de datos");
+            else if("no".equals(s)) JOptionPane.showMessageDialog(rootPane,"No se puede eliminar un elemento con ventas registradas");
             else {
                 JOptionPane.showMessageDialog(rootPane,"El elemento se ha eliminado con éxito");
 

@@ -278,7 +278,11 @@ public class EliminarCliente extends javax.swing.JFrame {
         
         OperacionesBD o = new OperacionesBD();
         try {
-            if("error".equals(o.deleteClient(cli.split(": ")[0]))) JOptionPane.showMessageDialog(rootPane,"No está conectado a la base de datos");
+            String s = o.deleteClient(cli.split(": ")[0]);
+            if("error".equals(s)) JOptionPane.showMessageDialog(rootPane,"No está conectado a la base de datos");
+            else if("alq".equals(s)) JOptionPane.showMessageDialog(rootPane,"No se puede eliminar a un cliente que tenga alquileres registrados");
+            else if("ven".equals(s)) JOptionPane.showMessageDialog(rootPane,"No se puede eliminar a un cliente que tenga ventas registrados");
+            else if("piso".equals(s)) JOptionPane.showMessageDialog(rootPane,"No se puede eliminar a un cliente que es inquilino de un piso");
             else {
                 JOptionPane.showMessageDialog(rootPane,"El cliente se ha eliminado con éxito");
                     

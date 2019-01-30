@@ -128,17 +128,57 @@ public class OperacionesBD {
     }
     
     public String deleteClient(String idCli) throws ClassNotFoundException{
-        String sql = "DELETE FROM Cliente WHERE id=?;";
+        // Compruebo si ya hay registrado un alquiler de ese cliente
+        String sql = "SELECT COUNT(*) AS num_pisos FROM Alquiler WHERE inquilino=?;";
       
         try {
             Connection conn = this.conectar();
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, idCli);
-            stmt.executeUpdate();
+            ResultSet rs = stmt.executeQuery();
             
-            this.desconectar(conn);
+            if(rs.getInt("num_pisos") == 0) {
+                // Compruebo si ya hay registrada una venta de ese cliente
+                sql = "SELECT COUNT(*) AS num_ventas FROM Venta WHERE cliente=?;";
+                stmt = conn.prepareStatement(sql);
+                stmt.setString(1, idCli);
+                rs = stmt.executeQuery();
+                
+                if(rs.getInt("num_ventas") == 0) {
+                    // Compruebo si hay registrado un piso con ese cliente como inquilino
+                    sql = "SELECT COUNT(*) AS num_pisos_inq FROM Piso WHERE inquilino=?;";
+                    stmt = conn.prepareStatement(sql);
+                    stmt.setString(1, idCli);
+                    rs = stmt.executeQuery();
+              
+                    if(rs.getInt("num_pisos_inq") == 0) {
+                        // Eliminamos el cliente
+                        sql = "DELETE FROM Cliente WHERE id=?;";
+                        stmt = conn.prepareStatement(sql);
+                        stmt.setString(1, idCli);
+                        stmt.executeUpdate();
+                        
+                        this.desconectar(conn);
+
+                        return "";
+                    }
+                    else {
+                        this.desconectar(conn);
             
-            return "";
+                        return "piso";
+                    } 
+                }
+                else {
+                    this.desconectar(conn);
+            
+                    return "ven";
+                }
+            }
+            else {
+                this.desconectar(conn);
+            
+                return "alq";
+            }    
         } catch (SQLException e) {
             return "error";
         }
@@ -241,17 +281,31 @@ public class OperacionesBD {
     }
     
     public String deletePiso(String idPiso) throws ClassNotFoundException{
-        String sql = "DELETE FROM Piso WHERE id=?;";
+        // Compruebo si ya hay registrado un alquiler con ese piso
+        String sql = "SELECT COUNT(*) AS num_pisos FROM Alquiler WHERE idPiso=?;";
       
         try {
             Connection conn = this.conectar();
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, idPiso);
-            stmt.executeUpdate();
+            ResultSet rs = stmt.executeQuery();
             
-            this.desconectar(conn);
+            if(rs.getInt("num_pisos") == 0) {
+                sql = "DELETE FROM Piso WHERE id=?;";
+                stmt = conn.prepareStatement(sql);
+                stmt.setString(1, idPiso);
+                stmt.executeUpdate();
+                
+                this.desconectar(conn);
             
-            return "";
+                return "";
+            }
+            else {
+                this.desconectar(conn);
+            
+                return "no";
+            }    
+                
         } catch (SQLException e) {
             return "error";
         }
@@ -349,17 +403,31 @@ public class OperacionesBD {
     }
     
     public String deleteElemento(String idElem) throws ClassNotFoundException{
-        String sql = "DELETE FROM Elemento WHERE id=?;";
+        // Compruebo si ya hay registrado una venta de ese elemento
+        String sql = "SELECT COUNT(*) AS num_elem FROM Venta WHERE idElemento=?;";
       
         try {
             Connection conn = this.conectar();
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, idElem);
-            stmt.executeUpdate();
+            ResultSet rs = stmt.executeQuery();
             
-            this.desconectar(conn);
+            if(rs.getInt("num_elem") == 0) {
+                sql = "DELETE FROM Elemento WHERE id=?;";
+                stmt = conn.prepareStatement(sql);
+                stmt.setString(1, idElem);
+                stmt.executeUpdate();
+                
+                this.desconectar(conn);
             
-            return "";
+                return "";
+            }
+            else {
+                this.desconectar(conn);
+            
+                return "no";
+            }    
+                
         } catch (SQLException e) {
             return "error";
         }
@@ -409,7 +477,6 @@ public class OperacionesBD {
             
             return a;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
             a.clear();
             a.add("error");
             return a;     
@@ -567,7 +634,6 @@ public class OperacionesBD {
             
             return "";
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
             return "error";
         }
     }
