@@ -5,6 +5,7 @@
  */
 package alquilerventa;
 
+import com.toedter.calendar.JTextFieldDateEditor;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,6 +69,7 @@ public class RegistrarVenta extends javax.swing.JFrame {
         cantidad.setModel(numeros);
         
         ((JSpinner.DefaultEditor) cantidad.getEditor()).getTextField().setEditable(false);
+        ((JTextFieldDateEditor) fecha.getDateEditor()).setEditable(false);
     }
 
     /**
@@ -86,6 +88,8 @@ public class RegistrarVenta extends javax.swing.JFrame {
         cantidad = new javax.swing.JSpinner();
         comprador = new javax.swing.JSpinner();
         btn_registrar = new javax.swing.JButton();
+        fecha = new com.toedter.calendar.JDateChooser();
+        tit_fecha = new javax.swing.JLabel();
         menubar = new javax.swing.JMenuBar();
         ini = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -121,6 +125,8 @@ public class RegistrarVenta extends javax.swing.JFrame {
                 btn_registrarActionPerformed(evt);
             }
         });
+
+        tit_fecha.setText("Fecha de la venta:");
 
         ini.setText("Inicio");
 
@@ -270,45 +276,50 @@ public class RegistrarVenta extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tit_elemento)
-                                    .addComponent(tit_comprador))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(elemento, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
-                                    .addComponent(comprador)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(tit_cantidad)
-                                .addGap(18, 18, 18)
-                                .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(tit_fecha)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(147, 147, 147)
-                        .addComponent(btn_registrar)))
-                .addContainerGap(30, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tit_elemento)
+                            .addComponent(tit_comprador))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(elemento, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
+                            .addComponent(comprador)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btn_registrar)
+                            .addComponent(tit_cantidad))
+                        .addGap(18, 18, 18)
+                        .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
+                .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tit_elemento)
                     .addComponent(elemento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(47, 47, 47)
+                .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tit_comprador)
                     .addComponent(comprador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40)
+                .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tit_cantidad)
                     .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tit_fecha)
+                    .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(33, 33, 33)
                 .addComponent(btn_registrar)
-                .addGap(32, 32, 32))
+                .addContainerGap())
         );
 
         pack();
@@ -319,7 +330,7 @@ public class RegistrarVenta extends javax.swing.JFrame {
         if(cant > 0f) {
             OperacionesBD o = new OperacionesBD();
             try {
-                if("error".equals(o.addVenta(((String) elemento.getValue()).split(": ")[0], ((String) comprador.getValue()).split(": ")[0], cant))) {
+                if("error".equals(o.addVenta(((String) elemento.getValue()).split(": ")[0], ((String) comprador.getValue()).split(": ")[0], cant, fecha.getDate()))) {
                     JOptionPane.showMessageDialog(rootPane, "Ya se ha registrado una venta de ese elemento para ese cliente en la fecha de hoy");
                 }
                 else {
@@ -538,6 +549,7 @@ public class RegistrarVenta extends javax.swing.JFrame {
     private javax.swing.JMenuItem elim_cli;
     private javax.swing.JMenuItem elim_elem;
     private javax.swing.JMenuItem elim_piso;
+    private com.toedter.calendar.JDateChooser fecha;
     private javax.swing.JMenu ini;
     private javax.swing.JMenuItem inicio;
     private javax.swing.JMenuBar menubar;
@@ -553,6 +565,7 @@ public class RegistrarVenta extends javax.swing.JFrame {
     private javax.swing.JLabel tit_cantidad;
     private javax.swing.JLabel tit_comprador;
     private javax.swing.JLabel tit_elemento;
+    private javax.swing.JLabel tit_fecha;
     private javax.swing.JMenu venta;
     // End of variables declaration//GEN-END:variables
 }

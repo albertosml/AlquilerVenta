@@ -18,6 +18,7 @@ import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 /*
@@ -483,7 +484,7 @@ public class OperacionesBD {
         }
     }
     
-    public String addVenta(String idElemento, String idCli, Float cantidad) throws ClassNotFoundException {
+    public String addVenta(String idElemento, String idCli, Float cantidad, Date fecha) throws ClassNotFoundException {
         String sql = "INSERT INTO Venta VALUES (?,?,?,?,?,?,?);";
  
         try {
@@ -493,10 +494,9 @@ public class OperacionesBD {
             pstmt.setString(1, idElemento);
             pstmt.setString(2, idCli);
             
-            Calendar c = Calendar.getInstance();
-            pstmt.setInt(3, c.get(Calendar.DAY_OF_MONTH));
-            pstmt.setString(4, meses[c.get(Calendar.MONTH)]);
-            pstmt.setInt(5, c.get(Calendar.YEAR));
+            pstmt.setInt(3, fecha.getDate());
+            pstmt.setString(4, meses[fecha.getMonth()]);
+            pstmt.setInt(5, fecha.getYear() + 1900);
             
             pstmt.setFloat(6, cantidad);
             

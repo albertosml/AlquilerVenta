@@ -474,11 +474,15 @@ public class ResConAlquiler extends javax.swing.JFrame {
     private void mesPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_mesPropertyChange
         btn_pagado.setEnabled(false);
         txt_pago.setText("");
+        inquilino.setText("");
+        precio.setText("");
     }//GEN-LAST:event_mesPropertyChange
 
     private void anioPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_anioPropertyChange
         btn_pagado.setEnabled(false);
         txt_pago.setText("");
+        inquilino.setText("");
+        precio.setText("");
     }//GEN-LAST:event_anioPropertyChange
 
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
