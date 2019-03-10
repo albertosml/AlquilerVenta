@@ -39,19 +39,7 @@ public class ModificarElemento extends javax.swing.JFrame {
             elemento.setModel(listModel);
             elemento.setValue(a.get(0));
             
-            try {
-                ArrayList<Object> ar = o.obtainElemento(a.get(0).split(": ")[0]);
-                if(ar.get(0) == "error") JOptionPane.showMessageDialog(rootPane, "No está conectado a la base de datos");
-                else {
-                    // Nombre
-                    nombre.setText((String) ar.get(0));
-
-                    // Precio/Unidad
-                    precio.setText(String.format("%.2f", ar.get(1)).replace(",", "."));
-                }
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ModificarPiso.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            btn_modificar.setEnabled(false);
         }
         else {
             SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
@@ -111,6 +99,12 @@ public class ModificarElemento extends javax.swing.JFrame {
         });
 
         tit_precio.setText("Precio por Kg o L o Garrafa:");
+
+        elemento.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                elementoStateChanged(evt);
+            }
+        });
 
         btn_buscar.setText("Buscar");
         btn_buscar.addActionListener(new java.awt.event.ActionListener() {
@@ -330,6 +324,9 @@ public class ModificarElemento extends javax.swing.JFrame {
                     
                     // Precio/Unidad
                     precio.setText(String.format("%.2f", a.get(1)).replace(",", "."));
+                    
+                    // Botón modificar 
+                    btn_modificar.setEnabled(true);
                 }
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ModificarPiso.class.getName()).log(Level.SEVERE, null, ex);
@@ -509,6 +506,12 @@ public class ModificarElemento extends javax.swing.JFrame {
         e.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_elim_cliActionPerformed
+
+    private void elementoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_elementoStateChanged
+        nombre.setText("");
+        precio.setText("");
+        btn_modificar.setEnabled(false);
+    }//GEN-LAST:event_elementoStateChanged
 
     /**
      * @param args the command line arguments

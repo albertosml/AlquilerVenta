@@ -85,6 +85,9 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
         total = new javax.swing.JLabel();
         check_anio = new javax.swing.JCheckBox();
         anio = new com.toedter.calendar.JYearChooser();
+        check_concepto = new javax.swing.JCheckBox();
+        concepto = new javax.swing.JComboBox<>();
+        btn_generar = new javax.swing.JButton();
         menubar = new javax.swing.JMenuBar();
         ini = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -131,11 +134,11 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Inquilino", "Piso", "Precio (en €)", "Mes"
+                "Inquilino", "Piso", "Concepto", "Precio (en €)", "Mes"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -147,15 +150,27 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
             tabla.getColumnModel().getColumn(0).setResizable(false);
             tabla.getColumnModel().getColumn(0).setPreferredWidth(200);
             tabla.getColumnModel().getColumn(1).setResizable(false);
-            tabla.getColumnModel().getColumn(1).setPreferredWidth(150);
+            tabla.getColumnModel().getColumn(1).setPreferredWidth(200);
             tabla.getColumnModel().getColumn(2).setResizable(false);
-            tabla.getColumnModel().getColumn(2).setPreferredWidth(15);
             tabla.getColumnModel().getColumn(3).setResizable(false);
+            tabla.getColumnModel().getColumn(3).setPreferredWidth(15);
+            tabla.getColumnModel().getColumn(4).setResizable(false);
         }
 
         total.setText("Total Alquileres:");
 
         check_anio.setText("Año:");
+
+        check_concepto.setText("Concepto:");
+
+        concepto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "LUZ", "AGUA", "BASURA", "VIVIENDA" }));
+
+        btn_generar.setText("Generar Factura");
+        btn_generar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_generarActionPerformed(evt);
+            }
+        });
 
         ini.setText("Inicio");
 
@@ -312,17 +327,23 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
                         .addGap(16, 16, 16)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(check_inquilino)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(inquilino, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(check_piso)
                                 .addGap(18, 18, 18)
-                                .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(102, 102, 102)
+                                .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(check_inquilino)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(inquilino, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(102, 102, 102)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(check_anio)
                                 .addGap(18, 18, 18)
-                                .addComponent(anio, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(anio, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(check_concepto)
+                                .addGap(18, 18, 18)
+                                .addComponent(concepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -330,8 +351,10 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
                 .addComponent(total, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(395, 395, 395))
             .addGroup(layout.createSequentialGroup()
-                .addGap(464, 464, 464)
+                .addGap(328, 328, 328)
                 .addComponent(btn_consultar)
+                .addGap(182, 182, 182)
+                .addComponent(btn_generar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -347,10 +370,14 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(check_inquilino)
-                    .addComponent(inquilino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addComponent(btn_consultar)
+                    .addComponent(inquilino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(check_concepto)
+                    .addComponent(concepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_consultar)
+                    .addComponent(btn_generar))
+                .addGap(12, 12, 12)
                 .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(total)
@@ -369,14 +396,14 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
         String inq = (String) inquilino.getValue();
         String year = Integer.toString(anio.getYear());
         
-        if(!check_piso.isSelected() && !check_inquilino.isSelected() && !check_anio.isSelected()) JOptionPane.showMessageDialog(rootPane, "No se puede hacer esa consulta, compruebe los datos");
+        if(!check_piso.isSelected() && !check_inquilino.isSelected() && !check_anio.isSelected() && !check_concepto.isSelected()) JOptionPane.showMessageDialog(rootPane, "No se puede hacer esa consulta, compruebe los datos");
         else {
             OperacionesBD o = new OperacionesBD();
             ArrayList<Vector<String>> a = null;
             try {
                 a = o.obtainAlquileres(check_piso.isSelected() && !pis.isEmpty() ? pis.split(": ")[0] : null, 
                                    check_inquilino.isSelected() && !inq.isEmpty() ? inq.split(": ")[0] : null,
-                                   check_anio.isSelected() ? year : null);
+                                   check_anio.isSelected() ? year : null, check_concepto.isSelected() ? concepto.getSelectedItem().toString() : null);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ConsultarAlquileres.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -389,7 +416,7 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
 
                 Float tot_t = 0f;
                 for(int i=0;i<a.size();i++) {
-                    table.addRow(new Object[]{a.get(i).get(3), a.get(i).get(4), String.format("%.2f", Float.parseFloat(a.get(i).get(2))), a.get(i).get(0) + "/" + a.get(i).get(1)});
+                    table.addRow(new Object[]{a.get(i).get(4), a.get(i).get(5), a.get(i).get(3), String.format("%.2f", Float.parseFloat(a.get(i).get(2))), a.get(i).get(0) + "/" + a.get(i).get(1)});
                     tot_t += Float.parseFloat(a.get(i).get(2));
                 }
 
@@ -546,6 +573,15 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_elim_cliActionPerformed
 
+    private void btn_generarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_generarActionPerformed
+        try {
+            GenerarFactura g = new GenerarFactura();
+            g.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ConsultarAlquileres.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btn_generarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -620,10 +656,13 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
     private javax.swing.JMenu alquiler;
     private com.toedter.calendar.JYearChooser anio;
     private javax.swing.JButton btn_consultar;
+    private javax.swing.JButton btn_generar;
     private javax.swing.JCheckBox check_anio;
+    private javax.swing.JCheckBox check_concepto;
     private javax.swing.JCheckBox check_inquilino;
     private javax.swing.JCheckBox check_piso;
     private javax.swing.JMenu cliente;
+    private javax.swing.JComboBox<String> concepto;
     private javax.swing.JMenuItem cons_alq;
     private javax.swing.JMenuItem consultar_ventas;
     private javax.swing.JMenuItem elim_cli;

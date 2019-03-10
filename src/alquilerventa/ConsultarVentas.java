@@ -6,6 +6,7 @@
 package alquilerventa;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,6 +85,10 @@ public class ConsultarVentas extends javax.swing.JFrame {
         total = new javax.swing.JLabel();
         check_anio = new javax.swing.JCheckBox();
         anio = new com.toedter.calendar.JYearChooser();
+        check_campania = new javax.swing.JCheckBox();
+        aniocampaniainicio = new com.toedter.calendar.JYearChooser();
+        guion = new javax.swing.JLabel();
+        aniocampaniafin = new com.toedter.calendar.JYearChooser();
         menubar = new javax.swing.JMenuBar();
         ini = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -154,6 +159,15 @@ public class ConsultarVentas extends javax.swing.JFrame {
         total.setText("Total Ventas:");
 
         check_anio.setText("Año:");
+
+        check_campania.setText("Campaña:");
+        check_campania.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                check_campaniaActionPerformed(evt);
+            }
+        });
+
+        guion.setText("-");
 
         ini.setText("Inicio");
 
@@ -306,49 +320,75 @@ public class ConsultarVentas extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(check_elemento)
-                        .addGap(18, 18, 18)
-                        .addComponent(elemento, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
-                        .addComponent(check_comprador)
-                        .addGap(18, 18, 18)
-                        .addComponent(comprador, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(55, 55, 55)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(check_elemento)
+                                .addGap(36, 36, 36)
+                                .addComponent(elemento, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(72, 72, 72)
+                                .addComponent(check_comprador)
+                                .addGap(18, 18, 18)
+                                .addComponent(comprador, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(215, 215, 215))
+                            .addComponent(scroll))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(total, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(395, 395, 395))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(75, 75, 75)
                         .addComponent(check_anio)
-                        .addGap(18, 18, 18)
+                        .addGap(46, 46, 46)
                         .addComponent(anio, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(47, 47, 47))
-                    .addComponent(scroll))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(465, 465, 465)
-                .addComponent(btn_consultar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(156, 156, 156)
+                        .addComponent(check_campania)
+                        .addGap(18, 18, 18)
+                        .addComponent(aniocampaniainicio, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(guion, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(aniocampaniafin, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(total, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(395, 395, 395))
+                .addComponent(btn_consultar)
+                .addGap(70, 70, 70))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(elemento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(check_elemento)
-                        .addComponent(check_comprador)
-                        .addComponent(comprador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(check_anio))
-                    .addComponent(anio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(elemento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(check_elemento)
+                    .addComponent(check_comprador)
+                    .addComponent(comprador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btn_consultar)
-                .addGap(38, 38, 38)
+                .addGap(3, 3, 3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(check_anio)
+                        .addComponent(anio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(check_campania)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(guion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(aniocampaniainicio, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(aniocampaniafin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(3, 3, 3)))
+                .addGap(39, 39, 39)
                 .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(total)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
+
+        Calendar cal = Calendar.getInstance();
+        aniocampaniainicio.setValue(cal.get(Calendar.YEAR)-1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -362,14 +402,28 @@ public class ConsultarVentas extends javax.swing.JFrame {
         String com = (String) comprador.getValue();
         String year = Integer.toString(anio.getYear());
         
-        if(!check_elemento.isSelected() && !check_comprador.isSelected() && !check_anio.isSelected()) JOptionPane.showMessageDialog(rootPane, "No se puede hacer esa consulta, compruebe los datos");
+        if(!check_elemento.isSelected() && !check_comprador.isSelected() && !check_anio.isSelected() && !check_campania.isSelected()) JOptionPane.showMessageDialog(rootPane, "No se puede hacer esa consulta, compruebe los datos");
         else {
             OperacionesBD o = new OperacionesBD();
             ArrayList<Vector<String>> a = null;
             try {
-                a = o.obtainVentas(check_elemento.isSelected() && !elem.isEmpty() ? elem.split(": ")[0] : null, 
+                if(check_campania.isSelected()) {
+                    if(aniocampaniafin.getYear() - aniocampaniainicio.getYear() == 1) {
+                        a = o.obtainVentas(check_elemento.isSelected() && !elem.isEmpty() ? elem.split(": ")[0] : null, 
                                    check_comprador.isSelected() && !com.isEmpty() ? com.split(": ")[0] : null,
-                                   check_anio.isSelected() ? year : null);
+                                   Integer.toString(aniocampaniainicio.getYear()), Integer.toString(aniocampaniafin.getYear()));
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(rootPane, "La diferencia entre el año de inicio y el año de fin debe ser igual a 1");
+                        return ;
+                    }
+                }
+                else {
+                    a = o.obtainVentas(check_elemento.isSelected() && !elem.isEmpty() ? elem.split(": ")[0] : null, 
+                                   check_comprador.isSelected() && !com.isEmpty() ? com.split(": ")[0] : null,
+                                   check_anio.isSelected() ? year : null, null);
+                }
+                
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ConsultarVentas.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -540,6 +594,10 @@ public class ConsultarVentas extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_elim_cliActionPerformed
 
+    private void check_campaniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_check_campaniaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_check_campaniaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -597,8 +655,11 @@ public class ConsultarVentas extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu alquiler;
     private com.toedter.calendar.JYearChooser anio;
+    private com.toedter.calendar.JYearChooser aniocampaniafin;
+    private com.toedter.calendar.JYearChooser aniocampaniainicio;
     private javax.swing.JButton btn_consultar;
     private javax.swing.JCheckBox check_anio;
+    private javax.swing.JCheckBox check_campania;
     private javax.swing.JCheckBox check_comprador;
     private javax.swing.JCheckBox check_elemento;
     private javax.swing.JMenu cliente;
@@ -609,6 +670,7 @@ public class ConsultarVentas extends javax.swing.JFrame {
     private javax.swing.JMenuItem elim_cli;
     private javax.swing.JMenuItem elim_elem;
     private javax.swing.JMenuItem elim_piso;
+    private javax.swing.JLabel guion;
     private javax.swing.JMenu ini;
     private javax.swing.JMenuItem inicio;
     private javax.swing.JMenuBar menubar;

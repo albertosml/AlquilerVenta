@@ -40,40 +40,10 @@ public class ModificarPiso extends javax.swing.JFrame {
             piso.setModel(listModel);
             piso.setValue(a.get(0));
             
-            // Obtener datos primer piso
-            ArrayList<Object> ar = o.obtainPiso(a.get(0).split(": ")[0]);
-            if(ar.get(0) == "error") {
-                JOptionPane.showMessageDialog(rootPane, "No está conectado a la base de datos");
-
-                // Me voy a inicio
-                AlquilerVenta av = new AlquilerVenta();
-                av.setVisible(true);
-                this.dispose();
-            }
-            else {
-                // Domicilio
-                domicilio.setText((String) ar.get(0));
-
-                // Inquilino
-                ArrayList<String> as = o.obtainClientsList();
-                if(!"error".equals(as.get(0))) {
-                    as.add("No hay inquilino");
-                    listModel = new SpinnerListModel(as);
-
-                    inquilino.setModel(listModel);
-                    if(ar.get(1) == null) inquilino.setValue("No hay inquilino");
-                    else inquilino.setValue(as.get(Integer.parseInt((String) ar.get(1)) - 1));
-                }
-                else {
-                    listModel = new SpinnerListModel(new String[]{""});
-                    inquilino.setModel(listModel);
-                }
-
-                ((JSpinner.DefaultEditor) inquilino.getEditor()).getTextField().setEditable(false);
-
-                // Precio/Mes
-                precio.setText(String.format("%.2f", ar.get(2)).replace(",", "."));
-            }
+            listModel = new SpinnerListModel(new String[]{""});
+            inquilino.setModel(listModel);
+            
+            btn_modificar.setEnabled(false);
         }
         else {
             SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
@@ -142,6 +112,17 @@ public class ModificarPiso extends javax.swing.JFrame {
         btn_buscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_buscarActionPerformed(evt);
+            }
+        });
+
+        piso.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                pisoStateChanged(evt);
+            }
+        });
+        piso.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                pisoPropertyChange(evt);
             }
         });
 
@@ -375,7 +356,7 @@ public class ModificarPiso extends javax.swing.JFrame {
                         
                         inquilino.setModel(listModel);
                         if(a.get(1) == null) inquilino.setValue("No hay inquilino");
-                        else inquilino.setValue(ar.get(Integer.parseInt((String) a.get(1)) - 1));
+                        else for(String c : ar) if(c.contains(((String) a.get(1)).split(":")[0])) inquilino.setValue(c);
                     }
                     else {
                         SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
@@ -386,6 +367,9 @@ public class ModificarPiso extends javax.swing.JFrame {
                     
                     // Precio/Mes
                     precio.setText(String.format("%.2f", a.get(2)).replace(",", "."));
+                    
+                    // Botón modificar
+                    btn_modificar.setEnabled(true);
                 }
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ModificarPiso.class.getName()).log(Level.SEVERE, null, ex);
@@ -571,6 +555,17 @@ public class ModificarPiso extends javax.swing.JFrame {
         e.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_elim_cliActionPerformed
+
+    private void pisoPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_pisoPropertyChange
+      
+    }//GEN-LAST:event_pisoPropertyChange
+
+    private void pisoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_pisoStateChanged
+        domicilio.setText("");
+        precio.setText("");
+        inquilino.setModel(new SpinnerListModel(new String[]{""}));
+        btn_modificar.setEnabled(false);
+    }//GEN-LAST:event_pisoStateChanged
 
     /**
      * @param args the command line arguments

@@ -5,7 +5,12 @@
         <group>
             <file>file:/C:/Users/alber/Desktop/informatica/AlquilerVenta/src/alquilerventa/ResConAlquiler.java</file>
             <file>file:/C:/Users/alber/Desktop/informatica/AlquilerVenta/src/alquilerventa/OperacionesBD.java</file>
+            <file>file:/C:/Users/alber/Desktop/informatica/AlquilerVenta/src/alquilerventa/GenerarFactura.java</file>
             <file>file:/C:/Users/alber/Desktop/informatica/AlquilerVenta/src/alquilerventa/RegistrarVenta.java</file>
+            <file>file:/C:/Users/alber/Desktop/informatica/AlquilerVenta/src/alquilerventa/ConsultarVentas.java</file>
+            <file>file:/C:/Users/alber/Desktop/informatica/AlquilerVenta/src/alquilerventa/ModificarPiso.java</file>
+            <file>file:/C:/Users/alber/Desktop/informatica/AlquilerVenta/src/alquilerventa/OperacionesPDF.java</file>
+            <file>file:/C:/Users/alber/Desktop/informatica/AlquilerVenta/src/alquilerventa/ConsultarAlquileres.java</file>
         </group>
     </open-files>
 </project-private>

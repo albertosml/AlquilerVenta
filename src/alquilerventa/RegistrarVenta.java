@@ -90,6 +90,7 @@ public class RegistrarVenta extends javax.swing.JFrame {
         btn_registrar = new javax.swing.JButton();
         fecha = new com.toedter.calendar.JDateChooser();
         tit_fecha = new javax.swing.JLabel();
+        btn_eliminar = new javax.swing.JButton();
         menubar = new javax.swing.JMenuBar();
         ini = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -127,6 +128,13 @@ public class RegistrarVenta extends javax.swing.JFrame {
         });
 
         tit_fecha.setText("Fecha de la venta:");
+
+        btn_eliminar.setText("Eliminar");
+        btn_eliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_eliminarActionPerformed(evt);
+            }
+        });
 
         ini.setText("Inicio");
 
@@ -276,26 +284,31 @@ public class RegistrarVenta extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(tit_fecha)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tit_elemento)
-                            .addComponent(tit_comprador))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(elemento, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
-                            .addComponent(comprador)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(tit_fecha)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tit_elemento)
+                                    .addComponent(tit_comprador))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(elemento, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
+                                    .addComponent(comprador)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(tit_cantidad)
+                                .addGap(18, 18, 18)
+                                .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btn_registrar)
-                            .addComponent(tit_cantidad))
-                        .addGap(18, 18, 18)
-                        .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(89, 89, 89)
+                        .addComponent(btn_registrar)
+                        .addGap(67, 67, 67)
+                        .addComponent(btn_eliminar)))
                 .addContainerGap(66, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -318,35 +331,14 @@ public class RegistrarVenta extends javax.swing.JFrame {
                     .addComponent(tit_fecha)
                     .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33)
-                .addComponent(btn_registrar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_registrar)
+                    .addComponent(btn_eliminar))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btn_registrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_registrarActionPerformed
-        Float cant = Float.parseFloat(cantidad.getValue().toString().replace(",", "."));
-        if(cant > 0f) {
-            OperacionesBD o = new OperacionesBD();
-            try {
-                if("error".equals(o.addVenta(((String) elemento.getValue()).split(": ")[0], ((String) comprador.getValue()).split(": ")[0], cant, fecha.getDate()))) {
-                    JOptionPane.showMessageDialog(rootPane, "Ya se ha registrado una venta de ese elemento para ese cliente en la fecha de hoy");
-                }
-                else {
-                    JOptionPane.showMessageDialog(rootPane, "La venta se ha registrado con éxito");
-                    
-                    // Me voy a inicio
-                    AlquilerVenta av = new AlquilerVenta();
-                    av.setVisible(true);
-                    this.dispose();
-                }
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(RegistrarVenta.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        else JOptionPane.showMessageDialog(rootPane, "La cantidad de una venta que se registre debe ser mayor que 0");
-    }//GEN-LAST:event_btn_registrarActionPerformed
 
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
         AlquilerVenta a = new AlquilerVenta();
@@ -495,6 +487,40 @@ public class RegistrarVenta extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_elim_cliActionPerformed
 
+    private void btn_registrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_registrarActionPerformed
+        Float cant = Float.parseFloat(cantidad.getValue().toString().replace(",", "."));
+        if(cant > 0f) {
+            if(fecha.getDate() == null) JOptionPane.showMessageDialog(rootPane, "Introduzca la fecha de la venta");
+            else {
+                OperacionesBD o = new OperacionesBD();
+                try {
+                    if("error".equals(o.addVenta(((String) elemento.getValue()).split(": ")[0], ((String) comprador.getValue()).split(": ")[0], cant, fecha.getDate()))) {
+                        JOptionPane.showMessageDialog(rootPane, "Ya se ha registrado una venta de ese elemento para ese cliente en la fecha de hoy");
+                    }
+                    else JOptionPane.showMessageDialog(rootPane, "La venta se ha registrado con éxito");
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(RegistrarVenta.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        else JOptionPane.showMessageDialog(rootPane, "La cantidad de una venta que se registre debe ser mayor que 0");
+    }//GEN-LAST:event_btn_registrarActionPerformed
+
+    private void btn_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarActionPerformed
+        if(fecha.getDate() == null) JOptionPane.showMessageDialog(rootPane, "Introduzca la fecha de la venta");
+        else {
+            OperacionesBD o = new OperacionesBD();
+            try {
+                if("error".equals(o.deleteVenta(((String) elemento.getValue()).split(": ")[0], ((String) comprador.getValue()).split(": ")[0], fecha.getDate()))) {
+                    JOptionPane.showMessageDialog(rootPane, "No está conectado a la base de datos");
+                }
+                else JOptionPane.showMessageDialog(rootPane, "La venta se ha eliminado con éxito");
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(RegistrarVenta.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btn_eliminarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -539,6 +565,7 @@ public class RegistrarVenta extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu alquiler;
+    private javax.swing.JButton btn_eliminar;
     private javax.swing.JButton btn_registrar;
     private javax.swing.JSpinner cantidad;
     private javax.swing.JMenu cliente;
