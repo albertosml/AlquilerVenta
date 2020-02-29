@@ -5,6 +5,7 @@
  */
 package alquilerventa;
 
+import com.mxrck.autocompleter.TextAutoCompleter;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -20,6 +21,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ConsultarAlquileres extends javax.swing.JFrame {
 
+    private TextAutoCompleter autocomplete_piso, autocomplete_cliente;
+    
     /**
      * Creates new form AlquilerVenta
      */
@@ -35,34 +38,12 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
         OperacionesBD o = new OperacionesBD();
         
         // Obtener pisos
-        ArrayList<String> a = o.obtainPisosList();
-        if(a.get(0) != "error") {
-            SpinnerListModel listModel = new SpinnerListModel(a);
-        
-            piso.setModel(listModel);
-            piso.setValue(a.get(0));
-        }
-        else {
-            SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
-            piso.setModel(listModel);
-        }
-        
-        ((JSpinner.DefaultEditor) piso.getEditor()).getTextField().setEditable(false);
+        ArrayList<Object> a = o.obtainPisosList();
+        autocomplete_piso = new TextAutoCompleter(piso, a, 0); 
         
         // Obtener clientes (compradores)        
         a = o.obtainClientsList();
-        if(a.get(0) != "error") {
-            SpinnerListModel listModel = new SpinnerListModel(a);
-        
-            inquilino.setModel(listModel);
-            inquilino.setValue(a.get(0));
-        }
-        else {
-            SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
-            inquilino.setModel(listModel);
-        }
-        
-        ((JSpinner.DefaultEditor) inquilino.getEditor()).getTextField().setEditable(false);
+        autocomplete_cliente = new TextAutoCompleter(inquilino, a, 0); 
     }
 
     /**
@@ -75,8 +56,6 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
     private void initComponents() {
 
         jTextField1 = new javax.swing.JTextField();
-        piso = new javax.swing.JSpinner();
-        inquilino = new javax.swing.JSpinner();
         btn_consultar = new javax.swing.JButton();
         check_piso = new javax.swing.JCheckBox();
         check_inquilino = new javax.swing.JCheckBox();
@@ -88,6 +67,8 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
         check_concepto = new javax.swing.JCheckBox();
         concepto = new javax.swing.JComboBox<>();
         btn_generar = new javax.swing.JButton();
+        piso = new javax.swing.JTextField();
+        inquilino = new javax.swing.JTextField();
         menubar = new javax.swing.JMenuBar();
         ini = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -199,7 +180,7 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
             }
         });
 
-        registro_consulta_alquiler.setText("Registrar Alquiler");
+        registro_consulta_alquiler.setText("Registrar/Consultar/Eliminar Alquiler");
         registro_consulta_alquiler.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registro_consulta_alquilerActionPerformed(evt);
@@ -243,7 +224,7 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
 
         venta.setText("Venta");
 
-        registrar_venta.setText("Registrar Venta");
+        registrar_venta.setText("Registrar/Eliminar Venta");
         registrar_venta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registrar_ventaActionPerformed(evt);
@@ -325,16 +306,16 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
                     .addComponent(scroll)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(16, 16, 16)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(check_inquilino)
+                                .addGap(18, 18, 18)
+                                .addComponent(inquilino))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(check_piso)
                                 .addGap(18, 18, 18)
-                                .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(check_inquilino)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(inquilino, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(102, 102, 102)
+                                .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, 543, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(103, 103, 103)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(check_anio)
@@ -344,17 +325,17 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
                                 .addComponent(check_concepto)
                                 .addGap(18, 18, 18)
                                 .addComponent(concepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 42, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(450, Short.MAX_VALUE)
-                .addComponent(total, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(395, 395, 395))
             .addGroup(layout.createSequentialGroup()
-                .addGap(328, 328, 328)
-                .addComponent(btn_consultar)
-                .addGap(182, 182, 182)
+                .addGap(211, 211, 211)
+                .addComponent(total, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_generar)
+                .addGap(214, 214, 214))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(458, 458, 458)
+                .addComponent(btn_consultar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -363,25 +344,25 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(check_piso)
-                        .addComponent(check_anio))
+                        .addComponent(check_anio)
+                        .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(anio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(check_inquilino)
-                    .addComponent(inquilino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(check_concepto)
-                    .addComponent(concepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(concepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inquilino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_consultar)
-                    .addComponent(btn_generar))
-                .addGap(12, 12, 12)
+                .addComponent(btn_consultar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(total)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(total)
+                    .addComponent(btn_generar))
+                .addContainerGap())
         );
 
         pack();
@@ -392,8 +373,8 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
     }//GEN-LAST:event_check_pisoActionPerformed
 
     private void btn_consultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_consultarActionPerformed
-        String pis = (String) piso.getValue();
-        String inq = (String) inquilino.getValue();
+        String pis = (String) autocomplete_piso.getItemSelected();
+        String inq = (String) autocomplete_cliente.getItemSelected();
         String year = Integer.toString(anio.getYear());
         
         if(!check_piso.isSelected() && !check_inquilino.isSelected() && !check_anio.isSelected() && !check_concepto.isSelected()) JOptionPane.showMessageDialog(rootPane, "No se puede hacer esa consulta, compruebe los datos");
@@ -401,8 +382,8 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
             OperacionesBD o = new OperacionesBD();
             ArrayList<Vector<String>> a = null;
             try {
-                a = o.obtainAlquileres(check_piso.isSelected() && !pis.isEmpty() ? pis.split(": ")[0] : null, 
-                                   check_inquilino.isSelected() && !inq.isEmpty() ? inq.split(": ")[0] : null,
+                a = o.obtainAlquileres(check_piso.isSelected() && !pis.isEmpty() ? pis.split("-->")[1].trim() : null, 
+                                   check_inquilino.isSelected() && !inq.isEmpty() ? inq.split("-->")[1].trim() : null,
                                    check_anio.isSelected() ? year : null, check_concepto.isSelected() ? concepto.getSelectedItem().toString() : null);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ConsultarAlquileres.class.getName()).log(Level.SEVERE, null, ex);
@@ -670,7 +651,7 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
     private javax.swing.JMenuItem elim_piso;
     private javax.swing.JMenu ini;
     private javax.swing.JMenuItem inicio;
-    private javax.swing.JSpinner inquilino;
+    private javax.swing.JTextField inquilino;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JMenuBar menubar;
     private javax.swing.JMenuItem modificar_cliente;
@@ -679,7 +660,7 @@ public class ConsultarAlquileres extends javax.swing.JFrame {
     private javax.swing.JMenuItem nuevo_cliente;
     private javax.swing.JMenuItem nuevo_elemento;
     private javax.swing.JMenuItem nuevo_piso;
-    private javax.swing.JSpinner piso;
+    private javax.swing.JTextField piso;
     private javax.swing.JMenuItem registrar_venta;
     private javax.swing.JMenuItem registro_consulta_alquiler;
     private javax.swing.JMenuItem salir;

@@ -5,14 +5,13 @@
  */
 package alquilerventa;
 
+import com.mxrck.autocompleter.TextAutoCompleter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerListModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -21,6 +20,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ConsultarVentas extends javax.swing.JFrame {
 
+    private TextAutoCompleter autocomplete_cliente, autocomplete_elemento;
+    
     /**
      * Creates new form AlquilerVenta
      */
@@ -36,34 +37,12 @@ public class ConsultarVentas extends javax.swing.JFrame {
         OperacionesBD o = new OperacionesBD();
         
         // Obtener elementos
-        ArrayList<String> a = o.obtainElementosList();
-        if(a.get(0) != "error") {
-            SpinnerListModel listModel = new SpinnerListModel(a);
-        
-            elemento.setModel(listModel);
-            elemento.setValue(a.get(0));
-        }
-        else {
-            SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
-            elemento.setModel(listModel);
-        }
-        
-        ((JSpinner.DefaultEditor) elemento.getEditor()).getTextField().setEditable(false);
+        ArrayList<Object> a = o.obtainElementosList();
+        autocomplete_elemento = new TextAutoCompleter(elemento, a, 0);
         
         // Obtener clientes (compradores)        
         a = o.obtainClientsList();
-        if(a.get(0) != "error") {
-            SpinnerListModel listModel = new SpinnerListModel(a);
-        
-            comprador.setModel(listModel);
-            comprador.setValue(a.get(0));
-        }
-        else {
-            SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
-            comprador.setModel(listModel);
-        }
-        
-        ((JSpinner.DefaultEditor) comprador.getEditor()).getTextField().setEditable(false);
+        autocomplete_cliente = new TextAutoCompleter(comprador, a, 0);
     }
 
     /**
@@ -75,8 +54,6 @@ public class ConsultarVentas extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        elemento = new javax.swing.JSpinner();
-        comprador = new javax.swing.JSpinner();
         btn_consultar = new javax.swing.JButton();
         check_elemento = new javax.swing.JCheckBox();
         check_comprador = new javax.swing.JCheckBox();
@@ -89,6 +66,8 @@ public class ConsultarVentas extends javax.swing.JFrame {
         aniocampaniainicio = new com.toedter.calendar.JYearChooser();
         guion = new javax.swing.JLabel();
         aniocampaniafin = new com.toedter.calendar.JYearChooser();
+        elemento = new javax.swing.JTextField();
+        comprador = new javax.swing.JTextField();
         menubar = new javax.swing.JMenuBar();
         ini = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -161,11 +140,6 @@ public class ConsultarVentas extends javax.swing.JFrame {
         check_anio.setText("Año:");
 
         check_campania.setText("Campaña:");
-        check_campania.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                check_campaniaActionPerformed(evt);
-            }
-        });
 
         guion.setText("-");
 
@@ -196,7 +170,7 @@ public class ConsultarVentas extends javax.swing.JFrame {
             }
         });
 
-        registro_consulta_alquiler.setText("Registrar Alquiler");
+        registro_consulta_alquiler.setText("Registrar/Consultar/Eliminar Alquiler");
         registro_consulta_alquiler.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registro_consulta_alquilerActionPerformed(evt);
@@ -240,7 +214,7 @@ public class ConsultarVentas extends javax.swing.JFrame {
 
         venta.setText("Venta");
 
-        registrar_venta.setText("Registrar Venta");
+        registrar_venta.setText("Registrar/Eliminar Venta");
         registrar_venta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registrar_ventaActionPerformed(evt);
@@ -324,13 +298,13 @@ public class ConsultarVentas extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(check_elemento)
-                                .addGap(36, 36, 36)
-                                .addComponent(elemento, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(72, 72, 72)
+                                .addGap(18, 18, 18)
+                                .addComponent(elemento, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(71, 71, 71)
                                 .addComponent(check_comprador)
                                 .addGap(18, 18, 18)
-                                .addComponent(comprador, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(215, 215, 215))
+                                .addComponent(comprador, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(166, 166, 166))
                             .addComponent(scroll))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -361,9 +335,9 @@ public class ConsultarVentas extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(elemento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(check_elemento)
                     .addComponent(check_comprador)
+                    .addComponent(elemento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comprador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btn_consultar)
@@ -398,8 +372,18 @@ public class ConsultarVentas extends javax.swing.JFrame {
     }//GEN-LAST:event_check_elementoActionPerformed
 
     private void btn_consultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_consultarActionPerformed
-        String elem = (String) elemento.getValue();
-        String com = (String) comprador.getValue();
+        String elem = (String) autocomplete_elemento.getItemSelected();
+        if(check_elemento.isSelected() && elem == null) {
+            JOptionPane.showMessageDialog(rootPane,"Se tiene que escoger un elemento elegido del autocompletado");
+            return ;
+        }
+        
+        String com = (String) autocomplete_cliente.getItemSelected();
+        if(check_comprador.isSelected() && com == null) {
+            JOptionPane.showMessageDialog(rootPane,"Se tiene que escoger un comprador elegido del autocompletado");
+            return ;
+        }
+        
         String year = Integer.toString(anio.getYear());
         
         if(!check_elemento.isSelected() && !check_comprador.isSelected() && !check_anio.isSelected() && !check_campania.isSelected()) JOptionPane.showMessageDialog(rootPane, "No se puede hacer esa consulta, compruebe los datos");
@@ -409,8 +393,8 @@ public class ConsultarVentas extends javax.swing.JFrame {
             try {
                 if(check_campania.isSelected()) {
                     if(aniocampaniafin.getYear() - aniocampaniainicio.getYear() == 1) {
-                        a = o.obtainVentas(check_elemento.isSelected() && !elem.isEmpty() ? elem.split(": ")[0] : null, 
-                                   check_comprador.isSelected() && !com.isEmpty() ? com.split(": ")[0] : null,
+                        a = o.obtainVentas(check_elemento.isSelected() && !elem.isEmpty() ? elem.split("-->")[1].trim() : null, 
+                                   check_comprador.isSelected() && !com.isEmpty() ? com.split("-->")[1].trim() : null,
                                    Integer.toString(aniocampaniainicio.getYear()), Integer.toString(aniocampaniafin.getYear()));
                     }
                     else {
@@ -419,8 +403,8 @@ public class ConsultarVentas extends javax.swing.JFrame {
                     }
                 }
                 else {
-                    a = o.obtainVentas(check_elemento.isSelected() && !elem.isEmpty() ? elem.split(": ")[0] : null, 
-                                   check_comprador.isSelected() && !com.isEmpty() ? com.split(": ")[0] : null,
+                    a = o.obtainVentas(check_elemento.isSelected() && !elem.isEmpty() ? elem.split("-->")[1].trim() : null, 
+                                   check_comprador.isSelected() && !com.isEmpty() ? com.split("-->")[1].trim() : null,
                                    check_anio.isSelected() ? year : null, null);
                 }
                 
@@ -594,10 +578,6 @@ public class ConsultarVentas extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_elim_cliActionPerformed
 
-    private void check_campaniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_check_campaniaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_check_campaniaActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -663,10 +643,10 @@ public class ConsultarVentas extends javax.swing.JFrame {
     private javax.swing.JCheckBox check_comprador;
     private javax.swing.JCheckBox check_elemento;
     private javax.swing.JMenu cliente;
-    private javax.swing.JSpinner comprador;
+    private javax.swing.JTextField comprador;
     private javax.swing.JMenuItem cons_alq;
     private javax.swing.JMenuItem consultar_ventas;
-    private javax.swing.JSpinner elemento;
+    private javax.swing.JTextField elemento;
     private javax.swing.JMenuItem elim_cli;
     private javax.swing.JMenuItem elim_elem;
     private javax.swing.JMenuItem elim_piso;

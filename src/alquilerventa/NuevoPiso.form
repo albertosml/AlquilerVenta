@@ -37,7 +37,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="registro_consulta_alquiler">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Registrar Alquiler"/>
+                <Property name="text" type="java.lang.String" value="Registrar/Consultar/Eliminar Alquiler"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registro_consulta_alquilerActionPerformed"/>
@@ -84,7 +84,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="registrar_venta">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Registrar Venta"/>
+                <Property name="text" type="java.lang.String" value="Registrar/Eliminar Venta"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registrar_ventaActionPerformed"/>
@@ -181,12 +181,8 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="161" max="-2" attributes="0"/>
-                      <Component id="btn_aniadir" min="-2" max="-2" attributes="0"/>
-                  </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="39" pref="39" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -195,22 +191,26 @@
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="precio" min="-2" pref="86" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="tit_domicilio" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="domicilio" min="-2" pref="256" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="tit_inquilino" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="inquilino" max="32767" attributes="0"/>
+                                  <Component id="tit_domicilio" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="domicilio" min="-2" pref="268" max="-2" attributes="0"/>
+                                  <Component id="inquilino" min="-2" pref="257" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
                   </Group>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="314" max="-2" attributes="0"/>
+                      <Component id="btn_aniadir" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace pref="43" max="32767" attributes="0"/>
+              <EmptySpace pref="37" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -267,10 +267,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="precio">
     </Component>
-    <Component class="javax.swing.JSpinner" name="inquilino">
-      <Events>
-        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="inquilinoStateChanged"/>
-      </Events>
+    <Component class="javax.swing.JTextField" name="inquilino">
     </Component>
   </SubComponents>
 </Form>

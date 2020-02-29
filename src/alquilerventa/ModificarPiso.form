@@ -37,7 +37,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="registro_consulta_alquiler">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Registrar Alquiler"/>
+                <Property name="text" type="java.lang.String" value="Registrar/Consultar/Eliminar Alquiler"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registro_consulta_alquilerActionPerformed"/>
@@ -84,7 +84,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="registrar_venta">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Registrar Venta"/>
+                <Property name="text" type="java.lang.String" value="Registrar/Eliminar Venta"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registrar_ventaActionPerformed"/>
@@ -181,90 +181,82 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="tit_piso" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="piso" min="-2" pref="521" max="-2" attributes="0"/>
-                      <EmptySpace pref="29" max="32767" attributes="0"/>
-                      <Component id="btn_buscar" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="142" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="tit_domicilio" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tit_inquilino" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="inquilino" min="-2" pref="256" max="-2" attributes="0"/>
-                                  <Component id="domicilio" min="-2" pref="256" max="-2" attributes="0"/>
+                                  <Component id="tit_domicilio" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tit_inquilino" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tit_piso" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="inquilino_seleccionado" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="inquilino" max="32767" attributes="0"/>
+                                      <Component id="domicilio" max="32767" attributes="0"/>
+                                      <Component id="piso" alignment="0" pref="327" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="tit_precio" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="btn_modificar" min="-2" max="-2" attributes="0"/>
-                                  <Component id="precio" min="-2" pref="86" max="-2" attributes="0"/>
-                              </Group>
+                              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+                              <Component id="precio" min="-2" pref="86" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="202" max="-2" attributes="0"/>
+                      <Component id="volver_inicio" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="209" max="-2" attributes="0"/>
+                      <Component id="btn_modificar" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
+              <EmptySpace pref="125" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tit_piso" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="piso" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btn_buscar" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="47" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tit_domicilio" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="domicilio" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tit_inquilino" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="inquilino" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="precio" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="tit_precio" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
+              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+              <Component id="volver_inicio" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="piso" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tit_piso" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="tit_domicilio" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="domicilio" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="tit_inquilino" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="inquilino" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="inquilino_seleccionado" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="30" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="tit_precio" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Component id="precio" alignment="1" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
               <Component id="btn_modificar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="tit_piso">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Piso:"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JButton" name="btn_modificar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Modificar"/>
@@ -285,18 +277,12 @@
     </Component>
     <Component class="javax.swing.JTextField" name="precio">
     </Component>
-    <Component class="javax.swing.JButton" name="btn_buscar">
+    <Component class="javax.swing.JButton" name="volver_inicio">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Buscar"/>
+        <Property name="text" type="java.lang.String" value="Volver a inicio"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_buscarActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JSpinner" name="piso">
-      <Events>
-        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="pisoStateChanged"/>
-        <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="pisoPropertyChange"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="volver_inicioActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="domicilio">
@@ -306,7 +292,25 @@
         <Property name="text" type="java.lang.String" value="Domicilio:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JSpinner" name="inquilino">
+    <Component class="javax.swing.JTextField" name="inquilino">
+      <Properties>
+        <Property name="toolTipText" type="java.lang.String" value="Introduzca el nuevo inquilino"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="piso">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="tit_piso">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Piso:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="inquilino_seleccionado">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Inquilino Seleccionado:"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

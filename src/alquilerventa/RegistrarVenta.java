@@ -11,14 +11,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
-import javax.swing.SpinnerListModel;
+import java.util.Date;
 import javax.swing.SpinnerNumberModel;
+import com.mxrck.autocompleter.TextAutoCompleter;
 
 /**
  *
  * @author alber
  */
 public class RegistrarVenta extends javax.swing.JFrame {
+
+    private TextAutoCompleter autocomplete_cliente, autocomplete_elemento;
 
     /**
      * Creates new form AlquilerVenta
@@ -30,40 +33,17 @@ public class RegistrarVenta extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         
         // Poner título
-        this.setTitle("Registrar Venta - AlquilerVenta");
+        this.setTitle("Registrar/Eliminar Venta - AlquilerVenta");
         
         OperacionesBD o = new OperacionesBD();
         
         // Obtener elementos
-        ArrayList<String> a = o.obtainElementosList();
-        if(a.get(0) != "error") {
-            SpinnerListModel listModel = new SpinnerListModel(a);
-        
-            elemento.setModel(listModel);
-            elemento.setValue(a.get(0));
-        }
-        else {
-            SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
-            elemento.setModel(listModel);
-        }
-        
-        ((JSpinner.DefaultEditor) elemento.getEditor()).getTextField().setEditable(false);
+        ArrayList<Object> a = o.obtainElementosList();
+        autocomplete_elemento = new TextAutoCompleter(elemento, a, 0);
         
         // Obtener clientes (compradores)        
         a = o.obtainClientsList();
-        if(a.get(0) != "error") {
-            SpinnerListModel listModel = new SpinnerListModel(a);
-        
-            comprador.setModel(listModel);
-            comprador.setValue(a.get(0));
-        }
-        else {
-            SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
-            comprador.setModel(listModel);
-        }
-        
-        ((JSpinner.DefaultEditor) comprador.getEditor()).getTextField().setEditable(false);
-        
+        autocomplete_cliente = new TextAutoCompleter(comprador, a, 0);
         // Cantidad
         SpinnerNumberModel numeros = new SpinnerNumberModel(1,1,10000,1);
         cantidad.setModel(numeros);
@@ -83,14 +63,15 @@ public class RegistrarVenta extends javax.swing.JFrame {
 
         tit_elemento = new javax.swing.JLabel();
         tit_comprador = new javax.swing.JLabel();
-        elemento = new javax.swing.JSpinner();
         tit_cantidad = new javax.swing.JLabel();
         cantidad = new javax.swing.JSpinner();
-        comprador = new javax.swing.JSpinner();
         btn_registrar = new javax.swing.JButton();
         fecha = new com.toedter.calendar.JDateChooser();
         tit_fecha = new javax.swing.JLabel();
         btn_eliminar = new javax.swing.JButton();
+        elemento = new javax.swing.JTextField();
+        comprador = new javax.swing.JTextField();
+        tit_cantidad1 = new javax.swing.JLabel();
         menubar = new javax.swing.JMenuBar();
         ini = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -127,6 +108,9 @@ public class RegistrarVenta extends javax.swing.JFrame {
             }
         });
 
+        fecha.setDate(new Date());
+        fecha.setDateFormatString("dd/MM/yyyy");
+
         tit_fecha.setText("Fecha de la venta:");
 
         btn_eliminar.setText("Eliminar");
@@ -135,6 +119,8 @@ public class RegistrarVenta extends javax.swing.JFrame {
                 btn_eliminarActionPerformed(evt);
             }
         });
+
+        tit_cantidad1.setText("IMPORTANTE: No es necesario introducir la cantidad para eliminar una venta");
 
         ini.setText("Inicio");
 
@@ -163,7 +149,7 @@ public class RegistrarVenta extends javax.swing.JFrame {
             }
         });
 
-        registro_consulta_alquiler.setText("Registrar Alquiler");
+        registro_consulta_alquiler.setText("Registrar/Consultar/Eliminar Alquiler");
         registro_consulta_alquiler.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registro_consulta_alquilerActionPerformed(evt);
@@ -207,7 +193,7 @@ public class RegistrarVenta extends javax.swing.JFrame {
 
         venta.setText("Venta");
 
-        registrar_venta.setText("Registrar Venta");
+        registrar_venta.setText("Registrar/Eliminar Venta");
         registrar_venta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registrar_ventaActionPerformed(evt);
@@ -289,27 +275,30 @@ public class RegistrarVenta extends javax.swing.JFrame {
                         .addGap(39, 39, 39)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(tit_fecha)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tit_elemento)
                                     .addComponent(tit_comprador))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(elemento, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
-                                    .addComponent(comprador)))
+                                    .addComponent(elemento)
+                                    .addComponent(comprador, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(tit_fecha)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(tit_cantidad)
                                 .addGap(18, 18, 18)
                                 .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(89, 89, 89)
+                        .addGap(115, 115, 115)
                         .addComponent(btn_registrar)
-                        .addGap(67, 67, 67)
-                        .addComponent(btn_eliminar)))
-                .addContainerGap(66, Short.MAX_VALUE))
+                        .addGap(132, 132, 132)
+                        .addComponent(btn_eliminar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(tit_cantidad1)))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -322,19 +311,21 @@ public class RegistrarVenta extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tit_comprador)
                     .addComponent(comprador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(41, 41, 41)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tit_fecha, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(fecha, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tit_cantidad)
                     .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tit_fecha)
-                    .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_registrar)
                     .addComponent(btn_eliminar))
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(tit_cantidad1)
+                .addGap(16, 16, 16))
         );
 
         pack();
@@ -492,14 +483,22 @@ public class RegistrarVenta extends javax.swing.JFrame {
         if(cant > 0f) {
             if(fecha.getDate() == null) JOptionPane.showMessageDialog(rootPane, "Introduzca la fecha de la venta");
             else {
-                OperacionesBD o = new OperacionesBD();
-                try {
-                    if("error".equals(o.addVenta(((String) elemento.getValue()).split(": ")[0], ((String) comprador.getValue()).split(": ")[0], cant, fecha.getDate()))) {
-                        JOptionPane.showMessageDialog(rootPane, "Ya se ha registrado una venta de ese elemento para ese cliente en la fecha de hoy");
+                String elem = (String) autocomplete_elemento.getItemSelected();
+                if(elem == null) JOptionPane.showMessageDialog(rootPane,"Se tiene que escoger un elemento elegido del autocompletado");
+                else {
+                    String cli = (String) autocomplete_cliente.getItemSelected();
+                    if(cli == null) JOptionPane.showMessageDialog(rootPane,"Se tiene que escoger un comprador elegido del autocompletado");
+                    else {
+                        OperacionesBD o = new OperacionesBD();
+                        try {
+                            if("error".equals(o.addVenta(elem.split("-->")[1].trim(), cli.split("-->")[1].trim(), cant, fecha.getDate()))) {
+                                JOptionPane.showMessageDialog(rootPane, "Ya se ha registrado una venta de ese elemento para ese cliente en la fecha de hoy");
+                            }
+                            else JOptionPane.showMessageDialog(rootPane, "La venta se ha registrado con éxito");
+                        } catch (ClassNotFoundException ex) {
+                            Logger.getLogger(RegistrarVenta.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
-                    else JOptionPane.showMessageDialog(rootPane, "La venta se ha registrado con éxito");
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(RegistrarVenta.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -509,14 +508,22 @@ public class RegistrarVenta extends javax.swing.JFrame {
     private void btn_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarActionPerformed
         if(fecha.getDate() == null) JOptionPane.showMessageDialog(rootPane, "Introduzca la fecha de la venta");
         else {
-            OperacionesBD o = new OperacionesBD();
-            try {
-                if("error".equals(o.deleteVenta(((String) elemento.getValue()).split(": ")[0], ((String) comprador.getValue()).split(": ")[0], fecha.getDate()))) {
-                    JOptionPane.showMessageDialog(rootPane, "No está conectado a la base de datos");
+            String elem = (String) autocomplete_elemento.getItemSelected();
+            if(elem == null) JOptionPane.showMessageDialog(rootPane,"Se tiene que escoger un elemento elegido del autocompletado");
+            else {
+                String cli = (String) autocomplete_cliente.getItemSelected();
+                if(cli == null) JOptionPane.showMessageDialog(rootPane,"Se tiene que escoger un comprador elegido del autocompletado");
+                else {
+                    OperacionesBD o = new OperacionesBD();
+                    try {
+                        if("error".equals(o.deleteVenta(elem.split("-->")[1].trim(), cli.split("-->")[1].trim(), fecha.getDate()))) {
+                            JOptionPane.showMessageDialog(rootPane, "No está conectado a la base de datos");
+                        }
+                        else JOptionPane.showMessageDialog(rootPane, "La venta se ha eliminado con éxito");
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(RegistrarVenta.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-                else JOptionPane.showMessageDialog(rootPane, "La venta se ha eliminado con éxito");
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(RegistrarVenta.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btn_eliminarActionPerformed
@@ -569,10 +576,10 @@ public class RegistrarVenta extends javax.swing.JFrame {
     private javax.swing.JButton btn_registrar;
     private javax.swing.JSpinner cantidad;
     private javax.swing.JMenu cliente;
-    private javax.swing.JSpinner comprador;
+    private javax.swing.JTextField comprador;
     private javax.swing.JMenuItem cons_alq;
     private javax.swing.JMenuItem consultar_ventas;
-    private javax.swing.JSpinner elemento;
+    private javax.swing.JTextField elemento;
     private javax.swing.JMenuItem elim_cli;
     private javax.swing.JMenuItem elim_elem;
     private javax.swing.JMenuItem elim_piso;
@@ -590,6 +597,7 @@ public class RegistrarVenta extends javax.swing.JFrame {
     private javax.swing.JMenuItem registro_consulta_alquiler;
     private javax.swing.JMenuItem salir;
     private javax.swing.JLabel tit_cantidad;
+    private javax.swing.JLabel tit_cantidad1;
     private javax.swing.JLabel tit_comprador;
     private javax.swing.JLabel tit_elemento;
     private javax.swing.JLabel tit_fecha;

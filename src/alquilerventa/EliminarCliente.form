@@ -37,7 +37,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="registro_consulta_alquiler">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Registrar Alquiler"/>
+                <Property name="text" type="java.lang.String" value="Registrar/Consultar/Eliminar Alquiler"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registro_consulta_alquilerActionPerformed"/>
@@ -84,7 +84,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="registrar_venta">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Registrar Venta"/>
+                <Property name="text" type="java.lang.String" value="Registrar/Eliminar Venta"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registrar_ventaActionPerformed"/>
@@ -181,29 +181,29 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace min="0" pref="37" max="32767" attributes="0"/>
-              <Component id="tit_cliente" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
-              <Component id="client" min="-2" pref="347" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
-          </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="211" max="-2" attributes="0"/>
               <Component id="btn_eliminar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="0" pref="37" max="32767" attributes="0"/>
+              <Component id="tit_cliente" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
+              <Component id="client" min="-2" pref="347" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="client" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="tit_cliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="client" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="89" max="32767" attributes="0"/>
+              <EmptySpace pref="84" max="32767" attributes="0"/>
               <Component id="btn_eliminar" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
           </Group>
@@ -219,15 +219,12 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_eliminarActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JSpinner" name="client">
-      <Events>
-        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="clientStateChanged"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JLabel" name="tit_cliente">
       <Properties>
         <Property name="text" type="java.lang.String" value="Cliente:"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="client">
     </Component>
   </SubComponents>
 </Form>

@@ -6,6 +6,7 @@
 package alquilerventa;
 
 import com.itextpdf.text.DocumentException;
+import com.mxrck.autocompleter.TextAutoCompleter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
@@ -14,8 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerListModel;
+import javax.swing.JTextField;
 
 /**
  *
@@ -23,6 +23,8 @@ import javax.swing.SpinnerListModel;
  */
 public class GenerarFactura extends javax.swing.JFrame {
 
+    private TextAutoCompleter autocomplete_piso;
+    
     /**
      * Creates new form GenerarFactura
      */
@@ -37,19 +39,32 @@ public class GenerarFactura extends javax.swing.JFrame {
         
         // Obtener pisos
         OperacionesBD o = new OperacionesBD();
-        ArrayList<String> a = o.obtainPisosList();
-        if(a.get(0) != "error") {
-            SpinnerListModel listModel = new SpinnerListModel(a);
+        ArrayList<Object> a = o.obtainPisosList();
+        JTextField pis = new JTextField("");
         
-            piso.setModel(listModel);
-            piso.setValue(a.get(0));
-        }
-        else {
-            SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
-            piso.setModel(listModel);
-        }
+        autocomplete_piso = new TextAutoCompleter(pis, a, 0);
+
+        int result = JOptionPane.showConfirmDialog(null, pis, 
+                "Elegir piso a modificar", JOptionPane.OK_OPTION);
         
-        ((JSpinner.DefaultEditor) piso.getEditor()).getTextField().setEditable(false);
+        String s = (String) autocomplete_piso.getItemSelected();
+        if (s == null || result != JOptionPane.OK_OPTION) {
+            JOptionPane.showMessageDialog(rootPane,"No se ha elegido ningún piso a modificar");
+
+            // Ocultar zonas de cambio de nombre
+            txt_piso.setVisible(false);
+            piso.setVisible(false);
+            txt_mes.setVisible(false);
+            mes.setVisible(false);
+            txt_anio.setVisible(false);
+            anio.setVisible(false);
+            btn_generar.setVisible(false);
+        } else {
+            piso.setText(s);
+            
+            // Ocultar botón de volver a inicio
+            btn_close.setVisible(false);
+        }
     }
 
     /**
@@ -62,13 +77,14 @@ public class GenerarFactura extends javax.swing.JFrame {
     private void initComponents() {
 
         titulo = new javax.swing.JLabel();
-        piso = new javax.swing.JSpinner();
         txt_piso = new javax.swing.JLabel();
         txt_mes = new javax.swing.JLabel();
         mes = new com.toedter.calendar.JMonthChooser();
         txt_anio = new javax.swing.JLabel();
         anio = new com.toedter.calendar.JYearChooser();
         btn_generar = new javax.swing.JButton();
+        piso = new javax.swing.JTextField();
+        btn_close = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -83,12 +99,6 @@ public class GenerarFactura extends javax.swing.JFrame {
         titulo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         titulo.setText("Introduzca los datos de la factura:");
 
-        piso.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                pisoStateChanged(evt);
-            }
-        });
-
         txt_piso.setText("Piso:");
 
         txt_mes.setText("Mes:");
@@ -102,64 +112,78 @@ public class GenerarFactura extends javax.swing.JFrame {
             }
         });
 
+        piso.setEditable(false);
+
+        btn_close.setText("Cerrar");
+        btn_close.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_closeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txt_mes)
-                                .addGap(18, 18, 18)
-                                .addComponent(mes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txt_piso)
-                                .addGap(18, 18, 18)
-                                .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txt_anio)
-                                .addGap(18, 18, 18)
-                                .addComponent(anio, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(txt_piso)
+                        .addGap(18, 18, 18)
+                        .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(279, 279, 279)
-                        .addComponent(btn_generar)))
-                .addContainerGap(20, Short.MAX_VALUE))
+                        .addComponent(txt_mes)
+                        .addGap(18, 18, 18)
+                        .addComponent(mes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txt_anio)
+                        .addGap(18, 18, 18)
+                        .addComponent(anio, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(85, 85, 85)))
+                .addContainerGap(43, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(titulo)
-                .addGap(194, 194, 194))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(titulo)
+                        .addGap(194, 194, 194))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btn_generar)
+                            .addComponent(btn_close, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(269, 269, 269))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addComponent(titulo)
-                .addGap(40, 40, 40)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_piso)
-                    .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt_mes)
-                    .addComponent(mes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(36, 36, 36)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt_anio)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(titulo)
+                        .addGap(40, 40, 40)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txt_piso)
+                            .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(39, 39, 39)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txt_mes)
+                                    .addComponent(mes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txt_anio))))
                     .addComponent(anio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addComponent(btn_generar)
-                .addGap(27, 27, 27))
+                .addGap(18, 18, 18)
+                .addComponent(btn_close)
+                .addGap(32, 32, 32))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void pisoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_pisoStateChanged
-       
-    }//GEN-LAST:event_pisoStateChanged
 
     private void btn_generarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_generarActionPerformed
         JFileChooser elector = new JFileChooser();
@@ -170,7 +194,7 @@ public class GenerarFactura extends javax.swing.JFrame {
             
             OperacionesPDF o = new OperacionesPDF();
             try {
-                String msg = o.generatePDF(((String) piso.getValue()).split(":")[0], mes.getMonth(), anio.getYear(), f.getAbsolutePath());
+                String msg = o.generatePDF(piso.getText().split("-->")[1].trim(), mes.getMonth(), anio.getYear(), f.getAbsolutePath());
                 if(msg == "error") JOptionPane.showMessageDialog(rootPane, "No está conectado a la base de datos");
                 else if(msg == "") JOptionPane.showMessageDialog(rootPane, "Factura generada con éxito");
                 else JOptionPane.showMessageDialog(rootPane, msg);
@@ -187,6 +211,10 @@ public class GenerarFactura extends javax.swing.JFrame {
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO add your handling code here:
     }//GEN-LAST:event_formWindowClosed
+
+    private void btn_closeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_closeActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btn_closeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -229,9 +257,10 @@ public class GenerarFactura extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.toedter.calendar.JYearChooser anio;
+    private javax.swing.JButton btn_close;
     private javax.swing.JButton btn_generar;
     private com.toedter.calendar.JMonthChooser mes;
-    private javax.swing.JSpinner piso;
+    private javax.swing.JTextField piso;
     private javax.swing.JLabel titulo;
     private javax.swing.JLabel txt_anio;
     private javax.swing.JLabel txt_mes;

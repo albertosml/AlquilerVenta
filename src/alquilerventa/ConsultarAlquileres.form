@@ -42,7 +42,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="registro_consulta_alquiler">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Registrar Alquiler"/>
+                <Property name="text" type="java.lang.String" value="Registrar/Consultar/Eliminar Alquiler"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registro_consulta_alquilerActionPerformed"/>
@@ -89,7 +89,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="registrar_venta">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Registrar Venta"/>
+                <Property name="text" type="java.lang.String" value="Registrar/Eliminar Venta"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registrar_ventaActionPerformed"/>
@@ -192,19 +192,19 @@
                   <Component id="scroll" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="check_inquilino" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="inquilino" max="32767" attributes="0"/>
+                          </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="check_piso" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="piso" min="-2" pref="544" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="check_inquilino" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="inquilino" min="-2" pref="256" max="-2" attributes="0"/>
+                              <Component id="piso" min="-2" pref="543" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="103" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="check_anio" min="-2" max="-2" attributes="0"/>
@@ -217,21 +217,21 @@
                               <Component id="concepto" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="42" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="450" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="211" max="-2" attributes="0"/>
               <Component id="total" min="-2" pref="178" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="395" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="btn_generar" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="214" max="-2" attributes="0"/>
           </Group>
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="328" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="458" max="-2" attributes="0"/>
               <Component id="btn_consultar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="182" max="-2" attributes="0"/>
-              <Component id="btn_generar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -242,38 +242,34 @@
               <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="piso" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="check_piso" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="check_anio" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="piso" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="anio" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="check_inquilino" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="inquilino" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="check_concepto" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="concepto" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="inquilino" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <Component id="btn_consultar" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="scroll" min="-2" pref="245" max="-2" attributes="0"/>
+              <EmptySpace pref="10" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btn_consultar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="total" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btn_generar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-              <Component id="scroll" min="-2" pref="245" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="total" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="16" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JSpinner" name="piso">
-    </Component>
-    <Component class="javax.swing.JSpinner" name="inquilino">
-    </Component>
     <Component class="javax.swing.JButton" name="btn_consultar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Consultar"/>
@@ -388,6 +384,10 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_generarActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="piso">
+    </Component>
+    <Component class="javax.swing.JTextField" name="inquilino">
     </Component>
   </SubComponents>
 </Form>

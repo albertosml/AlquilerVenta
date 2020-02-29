@@ -5,12 +5,12 @@
  */
 package alquilerventa;
 
+import com.mxrck.autocompleter.TextAutoCompleter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerListModel;
+import javax.swing.JTextField;
 
 /**
  *
@@ -18,6 +18,8 @@ import javax.swing.SpinnerListModel;
  */
 public class ModificarCliente extends javax.swing.JFrame {
 
+    private TextAutoCompleter autocomplete;
+    
     /**
      * Creates new form AlquilerVenta
      */
@@ -32,21 +34,31 @@ public class ModificarCliente extends javax.swing.JFrame {
         
         // Obtener clientes
         OperacionesBD o = new OperacionesBD();
-        ArrayList<String> a = o.obtainClientsList();
-        if(a.get(0) != "error") {
-            SpinnerListModel listModel = new SpinnerListModel(a);
+        ArrayList<Object> a = o.obtainClientsList();
         
-            client.setModel(listModel);
-            client.setValue(a.get(0));
-            nombre.setText(a.get(0).split(": ")[1]);
-        }
-        else {
-            SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
-            client.setModel(listModel);
-            nombre.setEditable(false);
-        }
+        JTextField client = new JTextField("");
         
-        ((JSpinner.DefaultEditor) client.getEditor()).getTextField().setEditable(false);
+        autocomplete = new TextAutoCompleter(client, a, 0);
+
+        int result = JOptionPane.showConfirmDialog(null, client, 
+                "Elegir cliente a modificar", JOptionPane.OK_OPTION);
+        
+        String s = (String) autocomplete.getItemSelected();
+        if (s == null || result != JOptionPane.OK_OPTION) {
+            JOptionPane.showMessageDialog(rootPane,"No se ha elegido ningún cliente a modificar");
+
+            // Ocultar zonas de cambio de nombre
+            tit_cliente.setVisible(false);
+            cliente_elegido.setVisible(false);
+            tit_nombre.setVisible(false);
+            nombre.setVisible(false);
+            btn_modificar.setVisible(false);
+        } else {
+            cliente_elegido.setText(s);
+            
+            // Ocultar botón de volver a inicio
+            volver_inicio.setVisible(false);
+        }
     }
 
     /**
@@ -60,9 +72,10 @@ public class ModificarCliente extends javax.swing.JFrame {
 
         tit_nombre = new javax.swing.JLabel();
         btn_modificar = new javax.swing.JButton();
-        nombre = new javax.swing.JTextField();
-        client = new javax.swing.JSpinner();
+        cliente_elegido = new javax.swing.JTextField();
         tit_cliente = new javax.swing.JLabel();
+        nombre = new javax.swing.JTextField();
+        volver_inicio = new javax.swing.JButton();
         menubar = new javax.swing.JMenuBar();
         ini = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -95,13 +108,16 @@ public class ModificarCliente extends javax.swing.JFrame {
             }
         });
 
-        client.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                clientStateChanged(evt);
-            }
-        });
+        cliente_elegido.setEditable(false);
 
         tit_cliente.setText("Cliente:");
+
+        volver_inicio.setText("Volver a inicio");
+        volver_inicio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                volver_inicioActionPerformed(evt);
+            }
+        });
 
         ini.setText("Inicio");
 
@@ -130,7 +146,7 @@ public class ModificarCliente extends javax.swing.JFrame {
             }
         });
 
-        registro_consulta_alquiler.setText("Registrar Alquiler");
+        registro_consulta_alquiler.setText("Registrar/Consultar/Eliminar Alquiler");
         registro_consulta_alquiler.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registro_consulta_alquilerActionPerformed(evt);
@@ -174,7 +190,7 @@ public class ModificarCliente extends javax.swing.JFrame {
 
         venta.setText("Venta");
 
-        registrar_venta.setText("Registrar Venta");
+        registrar_venta.setText("Registrar/Eliminar Venta");
         registrar_venta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registrar_ventaActionPerformed(evt);
@@ -250,33 +266,40 @@ public class ModificarCliente extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(231, 231, 231)
-                .addComponent(btn_modificar)
-                .addContainerGap(225, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 16, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tit_nombre)
-                    .addComponent(tit_cliente))
-                .addGap(28, 28, 28)
+                    .addComponent(tit_cliente)
+                    .addComponent(tit_nombre))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(client)
-                    .addComponent(nombre, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE))
-                .addGap(44, 44, 44))
+                    .addComponent(nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cliente_elegido, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(33, 33, 33))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(231, 231, 231)
+                        .addComponent(btn_modificar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(210, 210, 210)
+                        .addComponent(volver_inicio)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(73, 73, 73)
+                .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(client, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cliente_elegido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tit_cliente))
-                .addGap(52, 52, 52)
+                .addGap(26, 26, 26)
+                .addComponent(volver_inicio)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tit_nombre))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                    .addComponent(tit_nombre)
+                    .addComponent(nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(btn_modificar)
                 .addGap(49, 49, 49))
         );
@@ -284,19 +307,15 @@ public class ModificarCliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void clientStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_clientStateChanged
-        String s = (String) client.getValue();
-        nombre.setText(s.split(": ")[1]);
-    }//GEN-LAST:event_clientStateChanged
-
     private void btn_modificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_modificarActionPerformed
         String new_name = nombre.getText();
-        String cli = (String) client.getValue();
-        if(new_name.equals(cli.split(": ")[1])) JOptionPane.showMessageDialog(rootPane, "No se ha cambiado el nombre del cliente");
+        String cli = (String) cliente_elegido.getText();
+        cli = cli.split("-->")[1].trim();
+        if(new_name.equals(cli)) JOptionPane.showMessageDialog(rootPane, "No se ha cambiado el nombre del cliente");
         else if(!new_name.isEmpty()) {
             OperacionesBD o = new OperacionesBD();
             try {
-                if("error".equals(o.updateClient(cli.split(": ")[0], new_name))) JOptionPane.showMessageDialog(rootPane,"No está conectado a la base de datos");
+                if("error".equals(o.updateClient(cli, new_name))) JOptionPane.showMessageDialog(rootPane,"No está conectado a la base de datos");
                 else {
                     JOptionPane.showMessageDialog(rootPane,"El nombre del cliente se ha modificado con éxito");
                     
@@ -459,6 +478,13 @@ public class ModificarCliente extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_elim_cliActionPerformed
 
+    private void volver_inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volver_inicioActionPerformed
+        // Me voy a inicio
+        AlquilerVenta av = new AlquilerVenta();
+        av.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_volver_inicioActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -564,8 +590,8 @@ public class ModificarCliente extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu alquiler;
     private javax.swing.JButton btn_modificar;
-    private javax.swing.JSpinner client;
     private javax.swing.JMenu cliente;
+    private javax.swing.JTextField cliente_elegido;
     private javax.swing.JMenuItem cons_alq;
     private javax.swing.JMenuItem consultar_ventas;
     private javax.swing.JMenuItem elim_cli;
@@ -587,5 +613,6 @@ public class ModificarCliente extends javax.swing.JFrame {
     private javax.swing.JLabel tit_cliente;
     private javax.swing.JLabel tit_nombre;
     private javax.swing.JMenu venta;
+    private javax.swing.JButton volver_inicio;
     // End of variables declaration//GEN-END:variables
 }

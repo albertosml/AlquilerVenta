@@ -5,13 +5,11 @@
  */
 package alquilerventa;
 
-import java.io.IOException;
+import com.mxrck.autocompleter.TextAutoCompleter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerListModel;
 
 /**
  *
@@ -19,6 +17,8 @@ import javax.swing.SpinnerListModel;
  */
 public class EliminarPiso extends javax.swing.JFrame {
 
+    private TextAutoCompleter autocompleter;
+    
     /**
      * Creates new form AlquilerVenta
      */
@@ -33,19 +33,8 @@ public class EliminarPiso extends javax.swing.JFrame {
         
         // Obtener pisos
         OperacionesBD o = new OperacionesBD();
-        ArrayList<String> a = o.obtainPisosList();
-        if(a.get(0) != "error") {
-            SpinnerListModel listModel = new SpinnerListModel(a);
-        
-            piso.setModel(listModel);
-            piso.setValue(a.get(0));
-        }
-        else {
-            SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
-            piso.setModel(listModel);
-        }
-        
-        ((JSpinner.DefaultEditor) piso.getEditor()).getTextField().setEditable(false);
+        ArrayList<Object> a = o.obtainPisosList();
+        autocompleter = new TextAutoCompleter(piso, a, 0);
     }
 
     /**
@@ -59,7 +48,7 @@ public class EliminarPiso extends javax.swing.JFrame {
 
         tit_piso = new javax.swing.JLabel();
         btn_eliminar = new javax.swing.JButton();
-        piso = new javax.swing.JSpinner();
+        piso = new javax.swing.JTextField();
         menubar = new javax.swing.JMenuBar();
         ini = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -119,7 +108,7 @@ public class EliminarPiso extends javax.swing.JFrame {
             }
         });
 
-        registro_consulta_alquiler.setText("Registrar Alquiler");
+        registro_consulta_alquiler.setText("Registrar/Consultar/Eliminar Alquiler");
         registro_consulta_alquiler.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registro_consulta_alquilerActionPerformed(evt);
@@ -163,7 +152,7 @@ public class EliminarPiso extends javax.swing.JFrame {
 
         venta.setText("Venta");
 
-        registrar_venta.setText("Registrar Venta");
+        registrar_venta.setText("Registrar/Eliminar Venta");
         registrar_venta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registrar_ventaActionPerformed(evt);
@@ -244,12 +233,12 @@ public class EliminarPiso extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(30, 30, 30)
                         .addComponent(tit_piso)
-                        .addGap(26, 26, 26)
-                        .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, 484, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(253, 253, 253)
                         .addComponent(btn_eliminar)))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,7 +258,14 @@ public class EliminarPiso extends javax.swing.JFrame {
     private void btn_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarActionPerformed
         OperacionesBD o = new OperacionesBD();
         try {
-            String s = o.deletePiso(((String) piso.getValue()).split(": ")[0]);
+            String pis = (String) autocompleter.getItemSelected();
+            if(pis == null) {
+                JOptionPane.showMessageDialog(rootPane,"No se puede eliminar "
+                    + "un piso que no se haya elegido en el autocompletado");
+                return ;
+            }
+            
+            String s = o.deletePiso(pis.split("-->")[1].trim());
             if("error".equals(s)) JOptionPane.showMessageDialog(rootPane,"No está conectado a la base de datos");
             else if("no".equals(s)) JOptionPane.showMessageDialog(rootPane,"No se puede eliminar el piso al tener alquileres ya registrados");
             else {
@@ -504,7 +500,7 @@ public class EliminarPiso extends javax.swing.JFrame {
     private javax.swing.JMenuItem nuevo_cliente;
     private javax.swing.JMenuItem nuevo_elemento;
     private javax.swing.JMenuItem nuevo_piso;
-    private javax.swing.JSpinner piso;
+    private javax.swing.JTextField piso;
     private javax.swing.JMenuItem registrar_venta;
     private javax.swing.JMenuItem registro_consulta_alquiler;
     private javax.swing.JMenuItem salir;

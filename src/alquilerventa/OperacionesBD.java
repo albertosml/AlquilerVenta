@@ -73,10 +73,10 @@ public class OperacionesBD {
         return "";
     }
     
-    public ArrayList<String> obtainClientsList() throws ClassNotFoundException {
+    public ArrayList<Object> obtainClientsList() throws ClassNotFoundException {
         String sql = "SELECT * FROM Cliente;";
  
-        ArrayList<String> nombres = new ArrayList<>();
+        ArrayList<Object> nombres = new ArrayList<>();
         
         try {
             Connection conn = this.conectar();
@@ -85,17 +85,14 @@ public class OperacionesBD {
             
             // loop through the result set
             while (rs.next()) {
-                nombres.add(rs.getInt("id") + ": " + rs.getString("nombre"));
+                nombres.add(rs.getString("nombre") + " --> " + rs.getInt("id"));
             }
             
             this.desconectar(conn);
             
-            if(nombres.size() == 0) nombres.add("error");
-            
             return nombres;
         } catch (SQLException e) {
             nombres.clear();
-            nombres.add("error");
             return nombres;
         }
     }
@@ -196,10 +193,10 @@ public class OperacionesBD {
         return "";
     }
     
-    public ArrayList<String> obtainPisosList() throws ClassNotFoundException {
+    public ArrayList<Object> obtainPisosList() throws ClassNotFoundException {
         String sql = "SELECT id,domicilio FROM Piso;";
  
-        ArrayList<String> nombres = new ArrayList<>();
+        ArrayList<Object> nombres = new ArrayList<>();
         
         try {
             Connection conn = this.conectar();
@@ -208,12 +205,10 @@ public class OperacionesBD {
             
             // loop through the result set
             while (rs.next()) {
-                nombres.add(rs.getInt("id") + ": " + rs.getString("domicilio"));
+                nombres.add(rs.getString("domicilio") + " --> " + rs.getInt("id"));
             }
             
             this.desconectar(conn);
-            
-            if(nombres.size() == 0) nombres.add("error");
             
             return nombres;
         } catch (SQLException e) {
@@ -260,7 +255,7 @@ public class OperacionesBD {
             
             PreparedStatement stmt = conn.prepareStatement(sentencia);
             stmt.setString(1, domicilio);
-            if(inquilinoId.matches("[0-9]+")) stmt.setString(2, inquilinoId);
+            if(inquilinoId != null && inquilinoId.matches("[0-9]+")) stmt.setString(2, inquilinoId);
             else stmt.setString(2, null);
             stmt.setString(3, preciomes);
             stmt.setString(4, id);
@@ -321,10 +316,10 @@ public class OperacionesBD {
         return "";
     }
     
-    public ArrayList<String> obtainElementosList() throws ClassNotFoundException {
+    public ArrayList<Object> obtainElementosList() throws ClassNotFoundException {
         String sql = "SELECT id,nombre FROM Elemento;";
  
-        ArrayList<String> nombres = new ArrayList<>();
+        ArrayList<Object> nombres = new ArrayList<>();
         
         try {
             Connection conn = this.conectar();
@@ -333,17 +328,14 @@ public class OperacionesBD {
             
             // loop through the result set
             while (rs.next()) {
-                nombres.add(rs.getInt("id") + ": " + rs.getString("nombre"));
+                nombres.add(rs.getString("nombre") + " --> " + rs.getInt("id"));
             }
             
             this.desconectar(conn);
             
-            if(nombres.size() == 0) nombres.add("error");
-            
             return nombres;
         } catch (SQLException e) {
             nombres.clear();
-            nombres.add("error");
             return nombres;
         }
     }
@@ -455,7 +447,7 @@ public class OperacionesBD {
             else if(concepto == "VIVIENDA") {
                 a.add(rs_c.getString("inquilino"));
                 a.add(rs_c.getFloat("preciomes"));
-                a.add(false);
+                a.add(true);
                 a.add(true);
             }
             else {
@@ -470,7 +462,7 @@ public class OperacionesBD {
             stmt.setString(1, (String) a.get(0));
             rs = stmt.executeQuery();
             
-            if(rs.next()) a.set(0, rs.getString("id") + ": " + rs.getString("nombre"));
+            if(rs.next()) a.set(0, rs.getString("nombre") + " --> " + rs.getString("id"));
           
             this.desconectar(conn);
             
@@ -854,20 +846,20 @@ public class OperacionesBD {
             
             if(id_inq_v == id_inq_a || id_inq_a == 0 || id_inq_v == 0) {
                 if(id_inq_v == id_inq_l || id_inq_l == 0 || id_inq_v == 0) {
-                    if(id_inq_v == id_inq_b || id_inq_b == 0 || id_inq_v == 0) {   
+                    if(id_inq_v == id_inq_b || id_inq_b == 0 || id_inq_v == 0) {
                         if(id_inq_v > 0 || id_inq_l > 0 || id_inq_b > 0 || id_inq_a > 0) {
                             a.add(prec_inq_v.toString());
                             a.add(prec_inq_a.toString());
                             a.add(prec_inq_l.toString());
                             a.add(prec_inq_b.toString());
-                            
+
                             // Obtengo nombre inquilino
                             sql = "SELECT nombre from Cliente where id=?;";
 
                             stmt = conn.prepareStatement(sql);
                             stmt.setInt(1, id_inq_v > 0 ? id_inq_v : (id_inq_l > 0 ? id_inq_l : (id_inq_b > 0 ? id_inq_b : id_inq_a)));
                             rs = stmt.executeQuery();
-                            
+
                             a.add(rs.getString("nombre"));
                         }
                         else a.add("No se han rellenado los precios de cada concepto");

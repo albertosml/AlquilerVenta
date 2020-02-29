@@ -5,12 +5,11 @@
  */
 package alquilerventa;
 
+import com.mxrck.autocompleter.TextAutoCompleter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerListModel;
 
 /**
  *
@@ -18,6 +17,8 @@ import javax.swing.SpinnerListModel;
  */
 public class ResConAlquiler extends javax.swing.JFrame {
 
+    private TextAutoCompleter autocomplete_piso;
+    
     /**
      * Creates new form AlquilerVenta
      */
@@ -28,23 +29,22 @@ public class ResConAlquiler extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         
         // Poner título
-        this.setTitle("Registrar/Consultar Alquiler - AlquilerVenta");
+        this.setTitle("Registrar/Consultar/Eliminar Alquiler - AlquilerVenta");
         
         // Obtener pisos
         OperacionesBD o = new OperacionesBD();
-        ArrayList<String> a = o.obtainPisosList();
-        if(a.get(0) != "error") {
-            SpinnerListModel listModel = new SpinnerListModel(a);
+        ArrayList<Object> a = o.obtainPisosList();
         
-            piso.setModel(listModel);
-            piso.setValue(a.get(0));
-        }
-        else {
-            SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
-            piso.setModel(listModel);
-        }
-        
-        ((JSpinner.DefaultEditor) piso.getEditor()).getTextField().setEditable(false);
+        autocomplete_piso = new TextAutoCompleter(piso, a, 0);
+
+        // Deshabilito los botones que muestran los datos
+        tit_inquilino.setVisible(false);
+        inquilino.setVisible(false);
+        tit_precio.setVisible(false);
+        precio.setVisible(false);
+        btn_pagado.setVisible(false);
+        txt_pago.setVisible(false);
+        btn_nueva_busqueda.setVisible(false);
     }
 
     /**
@@ -65,12 +65,13 @@ public class ResConAlquiler extends javax.swing.JFrame {
         tit_inquilino = new javax.swing.JLabel();
         inquilino = new javax.swing.JTextField();
         btn_pagado = new javax.swing.JToggleButton();
-        piso = new javax.swing.JSpinner();
         tit_precio = new javax.swing.JLabel();
         precio = new javax.swing.JTextField();
         txt_pago = new javax.swing.JLabel();
         txt_concepto = new javax.swing.JLabel();
         concepto = new javax.swing.JComboBox<>();
+        piso = new javax.swing.JTextField();
+        btn_nueva_busqueda = new javax.swing.JButton();
         menubar = new javax.swing.JMenuBar();
         ini = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -96,23 +97,6 @@ public class ResConAlquiler extends javax.swing.JFrame {
 
         tit_piso.setText("Piso:");
 
-        mes.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                mesPropertyChange(evt);
-            }
-        });
-
-        anio.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                anioPropertyChange(evt);
-            }
-        });
-        anio.addVetoableChangeListener(new java.beans.VetoableChangeListener() {
-            public void vetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {
-                anioVetoableChange(evt);
-            }
-        });
-
         tit_mes.setText("Mes:");
 
         tit_anio.setText("Año:");
@@ -135,12 +119,6 @@ public class ResConAlquiler extends javax.swing.JFrame {
             }
         });
 
-        piso.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                pisoStateChanged(evt);
-            }
-        });
-
         tit_precio.setText("Precio Mensual del Alquiler:");
 
         precio.addActionListener(new java.awt.event.ActionListener() {
@@ -152,14 +130,11 @@ public class ResConAlquiler extends javax.swing.JFrame {
         txt_concepto.setText("Concepto:");
 
         concepto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "LUZ", "AGUA", "BASURA", "VIVIENDA" }));
-        concepto.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                conceptoItemStateChanged(evt);
-            }
-        });
-        concepto.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                conceptoPropertyChange(evt);
+
+        btn_nueva_busqueda.setText("Nueva búsqueda");
+        btn_nueva_busqueda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_nueva_busquedaActionPerformed(evt);
             }
         });
 
@@ -190,7 +165,7 @@ public class ResConAlquiler extends javax.swing.JFrame {
             }
         });
 
-        registro_consulta_alquiler.setText("Registrar Alquiler");
+        registro_consulta_alquiler.setText("Registrar/Consultar/Eliminar Alquiler");
         registro_consulta_alquiler.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registro_consulta_alquilerActionPerformed(evt);
@@ -234,7 +209,7 @@ public class ResConAlquiler extends javax.swing.JFrame {
 
         venta.setText("Venta");
 
-        registrar_venta.setText("Registrar Venta");
+        registrar_venta.setText("Registrar/Eliminar Venta");
         registrar_venta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registrar_ventaActionPerformed(evt);
@@ -313,48 +288,55 @@ public class ResConAlquiler extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(tit_inquilino)
-                                .addGap(32, 32, 32)
-                                .addComponent(inquilino, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(tit_precio)
-                                .addGap(58, 58, 58)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(precio, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btn_pagado)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(txt_pago, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(39, 39, 39)
                                 .addComponent(tit_piso))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(29, 29, 29)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
                                 .addComponent(tit_mes)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addComponent(mes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(51, 51, 51)
-                                .addComponent(tit_anio)
                                 .addGap(18, 18, 18)
-                                .addComponent(anio, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(47, 47, 47)
-                                .addComponent(txt_concepto)
-                                .addGap(18, 18, 18)
-                                .addComponent(concepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, 495, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(165, 165, 165)
+                                        .addComponent(btn_buscar)
+                                        .addGap(18, 18, 18))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(8, 8, 8)
+                                        .addComponent(mes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(tit_anio)
+                                        .addGap(8, 8, 8)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(anio, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(47, 47, 47)
+                                        .addComponent(txt_concepto)
+                                        .addGap(2, 2, 2)
+                                        .addComponent(concepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(btn_nueva_busqueda)))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(246, 246, 246)
-                        .addComponent(btn_buscar)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(39, 39, 39)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(tit_inquilino)
+                                    .addGap(57, 57, 57)
+                                    .addComponent(inquilino, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(tit_precio)
+                                    .addGap(35, 35, 35)
+                                    .addComponent(precio, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(199, 199, 199)
+                                .addComponent(btn_pagado)
+                                .addGap(30, 30, 30)
+                                .addComponent(txt_pago, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -364,65 +346,84 @@ public class ResConAlquiler extends javax.swing.JFrame {
                     .addComponent(tit_piso)
                     .addComponent(piso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(mes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tit_mes)
-                    .addComponent(tit_anio)
-                    .addComponent(anio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(mes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(anio, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txt_concepto)
-                        .addComponent(concepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addComponent(btn_buscar)
-                .addGap(18, 18, 18)
+                        .addComponent(txt_concepto, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(concepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tit_mes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tit_anio, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_buscar)
+                    .addComponent(btn_nueva_busqueda))
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(inquilino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tit_inquilino))
-                .addGap(23, 23, 23)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tit_precio)
                     .addComponent(precio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_pagado)
-                    .addComponent(txt_pago, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15))
+                .addGap(39, 39, 39)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btn_pagado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txt_pago, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(31, 31, 31))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
-        String p = (String) piso.getValue();
-        if(p.isEmpty()) JOptionPane.showMessageDialog(rootPane, "No se ha seleccionado ningún piso");
+        String p = (String) autocomplete_piso.getItemSelected();
+        if(p == null || p.isEmpty()) JOptionPane.showMessageDialog(rootPane, "No se ha seleccionado ningún piso");
         else {
             OperacionesBD o = new OperacionesBD();
             try {
                 txt_pago.setText("");
                 
-                ArrayList<Object> a = o.obtainAlquiler(p.split(": ")[0], mes.getMonth(), anio.getYear(), concepto.getSelectedItem().toString());
+                ArrayList<Object> a = o.obtainAlquiler(p.split("-->")[1].trim(), mes.getMonth(), anio.getYear(), concepto.getSelectedItem().toString());
                 if(a.get(0) == "error") JOptionPane.showMessageDialog(rootPane, "No se ha seleccionado ningún piso");
                 else {
                     // Obtener nombre inquilino
-                    if(a.get(0) == null) {
-                        inquilino.setText("No hay inquilino ni para ese piso ni para esa fecha");
-                        btn_pagado.setEnabled(false);
-                    }
+                    if(a.get(0) == null) inquilino.setText("No hay inquilino ni para ese piso ni para esa fecha");
                     else {
+                        // Hago ineditables botones de búsqueda
+                        piso.setEditable(false);
+                        mes.setEnabled(false);
+                        anio.setEnabled(false);
+                        concepto.setEnabled(false);
+                        
+                        // Hago visible los resultados
+                        tit_inquilino.setVisible(true);
+                        inquilino.setVisible(true);
+                        tit_precio.setVisible(true);
+                        precio.setVisible(true);
+                        btn_nueva_busqueda.setVisible(true);
+                        btn_pagado.setVisible(true);
+                        txt_pago.setVisible(true);
+                        
+                        // Deshabilito botón de búsqueda
+                        btn_buscar.setVisible(false);
+                        
                         inquilino.setText((String) a.get(0));
                     
                         // Precio/mes
                         precio.setText(((Float) a.get(1)).toString());
-                        precio.setEditable((!(boolean) a.get(2)) && !concepto.getSelectedItem().equals("VIVIENDA"));
+                        precio.setEditable(!(boolean) a.get(2));
                         
                         // Pagado
-                        if((boolean) a.get(3)) {
+                        if((boolean) a.get(2) && !(boolean) a.get(3)) {
+                            btn_pagado.setEnabled(false);
+                            btn_pagado.setSelected(true);
+                            txt_pago.setText("Pago realizado por antiguo inquilino");
+                        }
+                        else {
                             btn_pagado.setEnabled(true);
                             btn_pagado.setSelected((boolean) a.get(2));
-                        } 
-                        else {
-                            btn_pagado.setEnabled(false);
-                            txt_pago.setText((boolean) a.get(2) ? "Realizó el pago" : "No realizó el pago");
+                            txt_pago.setText((boolean) a.get(2) ? "Pago realizado" : "Pago no realizado");
                         }
                     }
                 }
@@ -440,12 +441,13 @@ public class ResConAlquiler extends javax.swing.JFrame {
         
         if(!btn_pagado.isSelected()) {
             try {
-                if("error".equals(o.deleteAlquiler(((String) piso.getValue()).split(": ")[0], mes.getMonth(), anio.getYear(), (String) concepto.getSelectedItem()))) {
+                if("error".equals(o.deleteAlquiler(((String) autocomplete_piso.getItemSelected()).split("-->")[1].trim(), mes.getMonth(), anio.getYear(), (String) concepto.getSelectedItem()))) {
                     JOptionPane.showMessageDialog(rootPane, "No está conectado a la base de datos");
                 }
                 else {
                     JOptionPane.showMessageDialog(rootPane, "Registro de alquiler eliminado con éxito");
                     if(!concepto.getSelectedItem().equals("VIVIENDA")) precio.setEditable(true);
+                    txt_pago.setText("Pago no realizado");
                 }
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ResConAlquiler.class.getName()).log(Level.SEVERE, null, ex);
@@ -456,14 +458,15 @@ public class ResConAlquiler extends javax.swing.JFrame {
                 // Compruebo precio
                 String prec = precio.getText();
                 if(prec.matches("[0-9]+[.][0-9]+") || prec.matches("[0-9]+[,][0-9]+") || prec.matches("[0-9]+")) {
-                    if("error".equals(o.insertAlquiler(((String) piso.getValue()).split(": ")[0], mes.getMonth(), 
-                       anio.getYear(), inquilino.getText().split(": ")[0], Float.parseFloat(prec.replace(",", ".")),
+                    if("error".equals(o.insertAlquiler(((String) autocomplete_piso.getItemSelected()).split("-->")[1].trim(), mes.getMonth(), 
+                       anio.getYear(), inquilino.getText().split("-->")[1].trim(), Float.parseFloat(prec.replace(",", ".")),
                        (String) concepto.getSelectedItem()))) {
                         JOptionPane.showMessageDialog(rootPane, "No está conectado a la base de datos");
                     }
                     else { 
                         JOptionPane.showMessageDialog(rootPane, "Registro de alquiler insertado con éxito");
                         if(!concepto.getSelectedItem().equals("VIVIENDA")) precio.setEditable(false);
+                        txt_pago.setText("Pago realizado");
                     }
                 }
                 else JOptionPane.showMessageDialog(rootPane, "No se ha introducido el precio mensual del alquiler que se debe "
@@ -473,29 +476,6 @@ public class ResConAlquiler extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btn_pagadoActionPerformed
-
-    private void pisoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_pisoStateChanged
-        btn_pagado.setEnabled(false);
-        inquilino.setText("");
-        precio.setText("");
-    }//GEN-LAST:event_pisoStateChanged
-
-    private void anioVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_anioVetoableChange
-    }//GEN-LAST:event_anioVetoableChange
-
-    private void mesPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_mesPropertyChange
-        btn_pagado.setEnabled(false);
-        txt_pago.setText("");
-        inquilino.setText("");
-        precio.setText("");
-    }//GEN-LAST:event_mesPropertyChange
-
-    private void anioPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_anioPropertyChange
-        btn_pagado.setEnabled(false);
-        txt_pago.setText("");
-        inquilino.setText("");
-        precio.setText("");
-    }//GEN-LAST:event_anioPropertyChange
 
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
         AlquilerVenta a = new AlquilerVenta();
@@ -644,16 +624,25 @@ public class ResConAlquiler extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_elim_cliActionPerformed
 
-    private void conceptoPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_conceptoPropertyChange
-  
-    }//GEN-LAST:event_conceptoPropertyChange
+    private void btn_nueva_busquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nueva_busquedaActionPerformed
+        // Hago editables botones de búsqueda
+        piso.setEditable(true);
+        mes.setEnabled(true);
+        anio.setEnabled(true);
+        concepto.setEnabled(true);
+        
+        // No hago visible los resultados
+        tit_inquilino.setVisible(false);
+        inquilino.setVisible(false);
+        tit_precio.setVisible(false);
+        precio.setVisible(false);
+        btn_nueva_busqueda.setVisible(false);
+        txt_pago.setVisible(false);
+        btn_pagado.setVisible(false);
 
-    private void conceptoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_conceptoItemStateChanged
-        btn_pagado.setEnabled(false);
-        txt_pago.setText("");
-        inquilino.setText("");
-        precio.setText("");
-    }//GEN-LAST:event_conceptoItemStateChanged
+        // Habilito botón de búsqueda y deshabilito el de nueva búsqueda
+        btn_buscar.setVisible(true);
+    }//GEN-LAST:event_btn_nueva_busquedaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -699,6 +688,7 @@ public class ResConAlquiler extends javax.swing.JFrame {
     private javax.swing.JMenu alquiler;
     private com.toedter.calendar.JYearChooser anio;
     private javax.swing.JButton btn_buscar;
+    private javax.swing.JButton btn_nueva_busqueda;
     private javax.swing.JToggleButton btn_pagado;
     private javax.swing.JMenu cliente;
     private javax.swing.JComboBox<String> concepto;
@@ -718,7 +708,7 @@ public class ResConAlquiler extends javax.swing.JFrame {
     private javax.swing.JMenuItem nuevo_cliente;
     private javax.swing.JMenuItem nuevo_elemento;
     private javax.swing.JMenuItem nuevo_piso;
-    private javax.swing.JSpinner piso;
+    private javax.swing.JTextField piso;
     private javax.swing.JTextField precio;
     private javax.swing.JMenuItem registrar_venta;
     private javax.swing.JMenuItem registro_consulta_alquiler;

@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerListModel;
+import com.mxrck.autocompleter.TextAutoCompleter;
 
 /**
  *
@@ -18,6 +17,8 @@ import javax.swing.SpinnerListModel;
  */
 public class EliminarCliente extends javax.swing.JFrame {
 
+    private TextAutoCompleter autocomplete;
+    
     /**
      * Creates new form AlquilerVenta
      */
@@ -32,19 +33,9 @@ public class EliminarCliente extends javax.swing.JFrame {
         
         // Obtener clientes
         OperacionesBD o = new OperacionesBD();
-        ArrayList<String> a = o.obtainClientsList();
-        if(a.get(0) != "error") {
-            SpinnerListModel listModel = new SpinnerListModel(a);
+        ArrayList<Object> a = o.obtainClientsList();
         
-            client.setModel(listModel);
-            client.setValue(a.get(0));
-        }
-        else {
-            SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
-            client.setModel(listModel);
-        }
-        
-        ((JSpinner.DefaultEditor) client.getEditor()).getTextField().setEditable(false);
+        autocomplete = new TextAutoCompleter(client, a, 0);
     }
 
     /**
@@ -57,8 +48,8 @@ public class EliminarCliente extends javax.swing.JFrame {
     private void initComponents() {
 
         btn_eliminar = new javax.swing.JButton();
-        client = new javax.swing.JSpinner();
         tit_cliente = new javax.swing.JLabel();
+        client = new javax.swing.JTextField();
         menubar = new javax.swing.JMenuBar();
         ini = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -86,12 +77,6 @@ public class EliminarCliente extends javax.swing.JFrame {
         btn_eliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_eliminarActionPerformed(evt);
-            }
-        });
-
-        client.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                clientStateChanged(evt);
             }
         });
 
@@ -124,7 +109,7 @@ public class EliminarCliente extends javax.swing.JFrame {
             }
         });
 
-        registro_consulta_alquiler.setText("Registrar Alquiler");
+        registro_consulta_alquiler.setText("Registrar/Consultar/Eliminar Alquiler");
         registro_consulta_alquiler.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registro_consulta_alquilerActionPerformed(evt);
@@ -168,7 +153,7 @@ public class EliminarCliente extends javax.swing.JFrame {
 
         venta.setText("Venta");
 
-        registrar_venta.setText("Registrar Venta");
+        registrar_venta.setText("Registrar/Eliminar Venta");
         registrar_venta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registrar_ventaActionPerformed(evt);
@@ -244,25 +229,25 @@ public class EliminarCliente extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 37, Short.MAX_VALUE)
-                .addComponent(tit_cliente)
-                .addGap(66, 66, 66)
-                .addComponent(client, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44))
             .addGroup(layout.createSequentialGroup()
                 .addGap(211, 211, 211)
                 .addComponent(btn_eliminar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 37, Short.MAX_VALUE)
+                .addComponent(tit_cliente)
+                .addGap(64, 64, 64)
+                .addComponent(client, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(73, 73, 73)
+                .addGap(78, 78, 78)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(client, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tit_cliente))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                    .addComponent(tit_cliente)
+                    .addComponent(client, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
                 .addComponent(btn_eliminar)
                 .addGap(74, 74, 74))
         );
@@ -270,26 +255,29 @@ public class EliminarCliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void clientStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_clientStateChanged
-    }//GEN-LAST:event_clientStateChanged
-
     private void btn_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarActionPerformed
-        String cli = (String) client.getValue();
+        String cli = (String) autocomplete.getItemSelected();
         
         OperacionesBD o = new OperacionesBD();
         try {
-            String s = o.deleteClient(cli.split(": ")[0]);
-            if("error".equals(s)) JOptionPane.showMessageDialog(rootPane,"No está conectado a la base de datos");
-            else if("alq".equals(s)) JOptionPane.showMessageDialog(rootPane,"No se puede eliminar a un cliente que tenga alquileres registrados");
-            else if("ven".equals(s)) JOptionPane.showMessageDialog(rootPane,"No se puede eliminar a un cliente que tenga ventas registrados");
-            else if("piso".equals(s)) JOptionPane.showMessageDialog(rootPane,"No se puede eliminar a un cliente que es inquilino de un piso");
+            // Validar expresión
+            if (cli == null) 
+                JOptionPane.showMessageDialog(rootPane,"No se puede eliminar a "
+                    + "un cliente que no se haya elegido en el autocompletado");
             else {
-                JOptionPane.showMessageDialog(rootPane,"El cliente se ha eliminado con éxito");
-                    
-                // Me voy a inicio
-                AlquilerVenta av = new AlquilerVenta();
-                av.setVisible(true);
-                this.dispose();
+                String s = o.deleteClient(cli.split("-->")[1].trim()); // nombre (id)
+                if("error".equals(s)) JOptionPane.showMessageDialog(rootPane,"No está conectado a la base de datos");
+                else if("alq".equals(s)) JOptionPane.showMessageDialog(rootPane,"No se puede eliminar a un cliente que tenga alquileres registrados");
+                else if("ven".equals(s)) JOptionPane.showMessageDialog(rootPane,"No se puede eliminar a un cliente que tenga ventas registrados");
+                else if("piso".equals(s)) JOptionPane.showMessageDialog(rootPane,"No se puede eliminar a un cliente que es inquilino de un piso");
+                else {
+                    JOptionPane.showMessageDialog(rootPane,"El cliente se ha eliminado con éxito");
+
+                    // Me voy a inicio
+                    AlquilerVenta av = new AlquilerVenta();
+                    av.setVisible(true);
+                    this.dispose();
+                }
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(EliminarCliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -612,7 +600,7 @@ public class EliminarCliente extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu alquiler;
     private javax.swing.JButton btn_eliminar;
-    private javax.swing.JSpinner client;
+    private javax.swing.JTextField client;
     private javax.swing.JMenu cliente;
     private javax.swing.JMenuItem cons_alq;
     private javax.swing.JMenuItem consultar_ventas;

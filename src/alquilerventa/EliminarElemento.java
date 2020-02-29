@@ -5,12 +5,11 @@
  */
 package alquilerventa;
 
+import com.mxrck.autocompleter.TextAutoCompleter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerListModel;
 
 /**
  *
@@ -18,6 +17,8 @@ import javax.swing.SpinnerListModel;
  */
 public class EliminarElemento extends javax.swing.JFrame {
 
+    private TextAutoCompleter autocomplete;
+    
     /**
      * Creates new form AlquilerVenta
      */
@@ -32,19 +33,8 @@ public class EliminarElemento extends javax.swing.JFrame {
         
         // Obtener elementos
         OperacionesBD o = new OperacionesBD();
-        ArrayList<String> a = o.obtainElementosList();
-        if(a.get(0) != "error") {
-            SpinnerListModel listModel = new SpinnerListModel(a);
-        
-            elemento.setModel(listModel);
-            elemento.setValue(a.get(0));
-        }
-        else {
-            SpinnerListModel listModel = new SpinnerListModel(new String[]{""});
-            elemento.setModel(listModel);
-        }
-        
-        ((JSpinner.DefaultEditor) elemento.getEditor()).getTextField().setEditable(false);
+        ArrayList<Object> a = o.obtainElementosList();
+        autocomplete = new TextAutoCompleter(client, a, 0);
     }
 
     /**
@@ -57,8 +47,8 @@ public class EliminarElemento extends javax.swing.JFrame {
     private void initComponents() {
 
         btn_eliminar = new javax.swing.JButton();
-        elemento = new javax.swing.JSpinner();
         tit_elemento = new javax.swing.JLabel();
+        client = new javax.swing.JTextField();
         menubar = new javax.swing.JMenuBar();
         ini = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -118,7 +108,7 @@ public class EliminarElemento extends javax.swing.JFrame {
             }
         });
 
-        registro_consulta_alquiler.setText("Registrar Alquiler");
+        registro_consulta_alquiler.setText("Registrar/Consultar/Eliminar Alquiler");
         registro_consulta_alquiler.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registro_consulta_alquilerActionPerformed(evt);
@@ -162,7 +152,7 @@ public class EliminarElemento extends javax.swing.JFrame {
 
         venta.setText("Venta");
 
-        registrar_venta.setText("Registrar Venta");
+        registrar_venta.setText("Registrar/Eliminar Venta");
         registrar_venta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registrar_ventaActionPerformed(evt);
@@ -241,19 +231,22 @@ public class EliminarElemento extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(47, 47, 47)
                 .addComponent(tit_elemento)
-                .addGap(66, 66, 66)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(elemento, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_eliminar))
-                .addContainerGap(65, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(66, 66, 66)
+                        .addComponent(btn_eliminar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(client, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(98, 98, 98)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(elemento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tit_elemento))
+                    .addComponent(tit_elemento)
+                    .addComponent(client, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                 .addComponent(btn_eliminar)
                 .addGap(66, 66, 66))
@@ -263,18 +256,27 @@ public class EliminarElemento extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarActionPerformed
+        String elem = (String) autocomplete.getItemSelected();
+        
         OperacionesBD o = new OperacionesBD();
         try {
-            String s = o.deleteElemento(((String) elemento.getValue()).split(": ")[0]);
-            if("error".equals(s)) JOptionPane.showMessageDialog(rootPane,"No está conectado a la base de datos");
-            else if("no".equals(s)) JOptionPane.showMessageDialog(rootPane,"No se puede eliminar un elemento con ventas registradas");
+            // Validar expresión
+            if (elem == null) 
+                JOptionPane.showMessageDialog(rootPane,"No se puede eliminar a "
+                    + "un elemento que no se haya elegido en el autocompletado");
             else {
-                JOptionPane.showMessageDialog(rootPane,"El elemento se ha eliminado con éxito");
+                String s = o.deleteElemento(elem.split("-->")[1].trim()); // nombre (id)
+        
+                if("error".equals(s)) JOptionPane.showMessageDialog(rootPane,"No está conectado a la base de datos");
+                else if("no".equals(s)) JOptionPane.showMessageDialog(rootPane,"No se puede eliminar un elemento con ventas registradas");
+                else {
+                    JOptionPane.showMessageDialog(rootPane,"El elemento se ha eliminado con éxito");
 
-                // Me voy a inicio
-                AlquilerVenta av = new AlquilerVenta();
-                av.setVisible(true);
-                this.dispose();
+                    // Me voy a inicio
+                    AlquilerVenta av = new AlquilerVenta();
+                    av.setVisible(true);
+                    this.dispose();
+                }
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(NuevoPiso.class.getName()).log(Level.SEVERE, null, ex);
@@ -501,10 +503,10 @@ public class EliminarElemento extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu alquiler;
     private javax.swing.JButton btn_eliminar;
+    private javax.swing.JTextField client;
     private javax.swing.JMenu cliente;
     private javax.swing.JMenuItem cons_alq;
     private javax.swing.JMenuItem consultar_ventas;
-    private javax.swing.JSpinner elemento;
     private javax.swing.JMenuItem elim_cli;
     private javax.swing.JMenuItem elim_elem;
     private javax.swing.JMenuItem elim_piso;

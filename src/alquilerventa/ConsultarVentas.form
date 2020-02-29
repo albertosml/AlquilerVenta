@@ -37,7 +37,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="registro_consulta_alquiler">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Registrar Alquiler"/>
+                <Property name="text" type="java.lang.String" value="Registrar/Consultar/Eliminar Alquiler"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registro_consulta_alquilerActionPerformed"/>
@@ -84,7 +84,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="registrar_venta">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Registrar Venta"/>
+                <Property name="text" type="java.lang.String" value="Registrar/Eliminar Venta"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registrar_ventaActionPerformed"/>
@@ -189,13 +189,13 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               <Component id="check_elemento" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                              <Component id="elemento" min="-2" pref="256" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="elemento" min="-2" pref="275" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
                               <Component id="check_comprador" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="comprador" min="-2" pref="256" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="215" max="-2" attributes="0"/>
+                              <Component id="comprador" min="-2" pref="305" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="166" max="-2" attributes="0"/>
                           </Group>
                           <Component id="scroll" max="32767" attributes="0"/>
                       </Group>
@@ -235,9 +235,9 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="elemento" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="check_elemento" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="check_comprador" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="elemento" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="comprador" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -270,10 +270,6 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JSpinner" name="elemento">
-    </Component>
-    <Component class="javax.swing.JSpinner" name="comprador">
-    </Component>
     <Component class="javax.swing.JButton" name="btn_consultar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Consultar"/>
@@ -371,9 +367,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Campa&#xf1;a:"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="check_campaniaActionPerformed"/>
-      </Events>
     </Component>
     <Component class="com.toedter.calendar.JYearChooser" name="aniocampaniainicio">
       <AuxValues>
@@ -386,6 +379,10 @@
       </Properties>
     </Component>
     <Component class="com.toedter.calendar.JYearChooser" name="aniocampaniafin">
+    </Component>
+    <Component class="javax.swing.JTextField" name="elemento">
+    </Component>
+    <Component class="javax.swing.JTextField" name="comprador">
     </Component>
   </SubComponents>
 </Form>
